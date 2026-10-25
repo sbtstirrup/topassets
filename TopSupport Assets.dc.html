@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Open+Sans:wght@400;500;600;700&display=swap">
+<style>
+html,body{margin:0;background:#e9eaec;font-family:'Open Sans',system-ui,sans-serif;color:#333;font-size:14px;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#1b8463}a:hover{color:#0d5c43}
+button{font-family:inherit;cursor:pointer;color:inherit}
+input,select,textarea{font-family:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #1b8463;outline-offset:2px}
+h1,h2,h3,p{margin:0}
+::selection{background:#d5e8de}
+</style>
+</helmet>
+<!-- SIGN IN -->
+<sc-if value="{{ signedOut }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height:100vh;display:flex;flex-direction:column">
+    <header style="background:#1b8463;color:#fff;padding:14px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:200px">
+        <div style="width:42px;height:42px;border-radius:12px;background:#fff;color:#1b8463;display:grid;place-items:center;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg></div>
+        <div><div style="font-family:Montserrat,sans-serif;font-weight:800;font-size:15px;line-height:1.2">TopSupport</div><div style="font-size:12px;opacity:.9;margin-top:3px">Asset management</div></div>
+      </div>
+      <span style="font-size:13px;font-weight:600;opacity:.9">Internal · IT Support</span>
+    </header>
+    <main style="flex:1;width:100%;max-width:1120px;margin:0 auto;padding:32px 28px 56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:32px;align-items:start">
+      <div style="padding:8px 0">
+        <h1 style="font-family:Montserrat,sans-serif;font-weight:800;font-size:38px;line-height:1.15;color:#0d4a37">Sign in to TopSupport Assets</h1>
+        <p style="font-size:16px;line-height:1.6;color:#555;margin-top:12px;max-width:60ch">One record of every laptop, phone, licence and switch: who has it, where it is, and when its cover runs out.</p>
+        <div style="background:#f2f8f5;border:1px solid #d5e8de;border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;margin-top:24px">
+          <div style="font-weight:700;font-size:14px;color:#0d5c43">Which sign-in do I use?</div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#333"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#d8eee2;color:#0d5c43;flex-shrink:0">Technician</span><span>Day-to-day: find assets, assign and check in kit, log repairs. Email and password.</span></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#333"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#1b8463;color:#fff;flex-shrink:0">Admin</span><span>Users, disposal, licences and the full audit trail. Password plus a verification code from your authenticator.</span></div>
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px;display:flex;flex-direction:column;gap:18px;max-width:460px;width:100%;justify-self:end">
+        <div style="display:flex;gap:6px" role="tablist">
+          <sc-for list="{{ loginTabs }}" as="t" hint-placeholder-count="2">
+            <button type="button" role="tab" aria-selected="{{ t.on }}" onClick="{{ t.go }}" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;min-height:40px">{{ t.label }}</button>
+          </sc-for>
+        </div>
+        <div><div style="font-size:18px;font-weight:700">{{ login.heading }}</div><p style="color:#666;font-size:14px;line-height:1.5;margin-top:4px">{{ login.lede }}</p></div>
+        <sc-if value="{{ login.err }}" hint-placeholder-val="{{ false }}"><div style="background:#fbe2e5;color:#a8102a;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;font-weight:600">{{ login.err }}</div></sc-if>
+        <sc-if value="{{ login.stepCreds }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Work email</label><input type="email" value="{{ login.email }}" onChange="{{ loginEmail }}" onKeyDown="{{ loginKey }}" autoComplete="username" placeholder="name@topcashback.co.uk" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;gap:8px"><label style="font-size:13px;font-weight:600;color:#444">Password</label><button type="button" onClick="{{ forgot }}" style="background:none;border:none;padding:0;color:#1b8463;font-weight:600;text-decoration:underline;font-size:13px">Forgotten?</button></div><input type="password" value="{{ login.password }}" onChange="{{ loginPassword }}" onKeyDown="{{ loginKey }}" autoComplete="current-password" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+          <label style="display:flex;gap:10px;align-items:center;font-size:14px;cursor:pointer"><input type="checkbox" checked="{{ login.remember }}" onChange="{{ loginRemember }}" style="accent-color:#1b8463;width:18px;height:18px;margin:0">Keep me signed in on this device</label>
+          <button type="button" onClick="{{ submitLogin }}" style="border-radius:999px;padding:14px 26px;font-size:16px;font-weight:700;min-height:52px;background:#1b8463;color:#fff;border:none;width:100%" style-hover="background:#146b50">{{ login.cta }}</button>
+        </sc-if>
+        <sc-if value="{{ login.stepCode }}" hint-placeholder-val="{{ false }}">
+          <div style="border-radius:12px;padding:10px 14px;font-size:13px;line-height:1.5;background:#fff6e5;color:#7a3a00;display:flex;gap:10px;align-items:flex-start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span>Admin access needs a second factor. Open your authenticator app and enter the 6-digit code for <strong>{{ login.email }}</strong>.</span></div>
+          <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Verification code</label><input value="{{ login.code }}" onChange="{{ loginCode }}" onKeyDown="{{ loginKey }}" inputMode="numeric" autoComplete="one-time-code" maxLength="6" placeholder="000000" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:22px;font-weight:700;letter-spacing:.3em;font-family:ui-monospace,Menlo,Consolas,monospace;background:#fff;min-height:52px"></div>
+          <button type="button" onClick="{{ submitLogin }}" style="border-radius:999px;padding:14px 26px;font-size:16px;font-weight:700;min-height:52px;background:#1b8463;color:#fff;border:none;width:100%" style-hover="background:#146b50">Verify and sign in</button>
+          <button type="button" onClick="{{ backToCreds }}" style="background:none;border:none;padding:10px 12px;color:#1b8463;font-weight:600;border-radius:999px;font-size:14px" style-hover="background:#f2f8f5">Use a different account</button>
+        </sc-if>
+        <div style="background:#f6f7f8;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+          <div style="font-size:12px;color:#555;line-height:1.5"><strong>Demo accounts</strong> — click one to fill the form, then press the button. Any password works; admin code is pre-filled.</div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <sc-for list="{{ demoAccounts }}" as="d" hint-placeholder-count="7">
+              <button type="button" onClick="{{ d.go }}" style="display:flex;gap:10px;align-items:center;width:100%;border:1px solid #e3e5e8;background:#fff;border-radius:10px;padding:6px 10px 6px 6px;text-align:left;min-height:44px" style-hover="border-color:#1b8463;background:#f4f9f6">
+                <span style="width:30px;height:30px;border-radius:999px;background:#d5e8de;color:#0d5c43;display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0">{{ d.init }}</span>
+                <span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.name }}</span><span style="display:block;font-size:11px;color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.email }} · {{ d.hint }}</span></span>
+                <span style="display:inline-flex;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap;border:1px solid {{ d.rbd }};background:{{ d.rbg }};color:{{ d.rfg }}">{{ d.role }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</sc-if>
+
+<sc-if value="{{ signedIn }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;min-height:100vh">
+  <aside style="width:264px;flex-shrink:0;background:#1b8463;color:#fff;display:flex;flex-direction:column;position:sticky;top:0;height:100vh">
+    <div style="padding:20px 16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.2)">
+      <div style="width:42px;height:42px;border-radius:12px;background:#fff;color:#1b8463;display:grid;place-items:center;flex-shrink:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg></div>
+      <div><div style="font-family:Montserrat,sans-serif;font-weight:800;font-size:15px;line-height:1.2">TopSupport</div><div style="font-size:12px;opacity:.9;margin-top:3px">Asset management</div></div>
+    </div>
+    <nav style="padding:14px 10px;display:flex;flex-direction:column;gap:4px;flex:1">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.88);padding:2px 14px 4px">Assets</div>
+      <sc-for list="{{ navMain }}" as="n" hint-placeholder-count="4">
+        <button type="button" onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;width:100%;border:none;border-radius:999px;padding:10px 14px;font-size:14px;font-weight:600;text-align:left;min-height:42px;background:{{ n.bg }};color:{{ n.fg }}" style-hover="background:{{ n.hbg }}">
+          <span style="width:18px;height:18px;flex-shrink:0;display:grid;place-items:center">{{ n.icon }}</span>
+          <span style="flex:1">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}"><span style="min-width:26px;text-align:center;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700;background:{{ n.cbg }};color:{{ n.cfg }}">{{ n.count }}</span></sc-if>
+        </button>
+      </sc-for>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.88);padding:14px 14px 4px">Insight</div>
+      <sc-for list="{{ navInsight }}" as="n" hint-placeholder-count="2">
+        <button type="button" onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;width:100%;border:none;border-radius:999px;padding:10px 14px;font-size:14px;font-weight:600;text-align:left;min-height:42px;background:{{ n.bg }};color:{{ n.fg }}" style-hover="background:{{ n.hbg }}">
+          <span style="width:18px;height:18px;flex-shrink:0;display:grid;place-items:center">{{ n.icon }}</span>
+          <span style="flex:1">{{ n.label }}</span>
+        </button>
+      </sc-for>
+      <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}"><div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.88);padding:14px 14px 4px">Admin</div></sc-if>
+      <sc-for list="{{ navAdmin }}" as="n" hint-placeholder-count="2">
+        <button type="button" onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;width:100%;border:none;border-radius:999px;padding:10px 14px;font-size:14px;font-weight:600;text-align:left;min-height:42px;background:{{ n.bg }};color:{{ n.fg }}" style-hover="background:{{ n.hbg }}">
+          <span style="width:18px;height:18px;flex-shrink:0;display:grid;place-items:center">{{ n.icon }}</span>
+          <span style="flex:1">{{ n.label }}</span>
+          <sc-if value="{{ n.count }}" hint-placeholder-val="{{ false }}"><span style="min-width:26px;text-align:center;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700;background:{{ n.cbg }};color:{{ n.cfg }}">{{ n.count }}</span></sc-if>
+        </button>
+      </sc-for>
+    </nav>
+    <div style="padding:10px;border-top:1px solid rgba(255,255,255,.2)">
+      <div style="display:flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;font-size:13px;font-weight:600;min-height:40px">
+        <span style="width:32px;height:32px;border-radius:999px;background:{{ me.avBg }};color:{{ me.avFg }};display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0">{{ me.init }}</span>
+        <span style="flex:1;min-width:0;overflow:hidden"><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ me.name }}</span><span style="display:block;font-size:11px;opacity:.85;font-weight:600">{{ me.role }}</span></span>
+        <button type="button" onClick="{{ signOut }}" aria-label="Sign out" title="Sign out" style="width:36px;height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;display:grid;place-items:center;flex-shrink:0" style-hover="background:rgba(255,255,255,.14)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"></path></svg></button>
+      </div>
+    </div>
+  </aside>
+
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+    <header style="background:#fff;border-bottom:1px solid #e1e3e6;padding:14px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:30">
+      <div style="flex:1;min-width:180px">
+        <h1 style="font-size:24px;font-weight:700;line-height:1.25">{{ title }}</h1>
+        <p style="margin-top:4px;color:#666;font-size:14px">{{ subtitle }}</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ goAssets }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Back to inventory</button>
+        </sc-if>
+        <sc-if value="{{ isUserArea }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ goUsers }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">All users</button>
+        </sc-if>
+        <sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ primaryGo }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#1b8463;color:#fff;border:none;display:inline-flex;align-items:center;gap:8px" style-hover="background:#146b50"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>{{ primaryLabel }}</button></sc-if>
+      </div>
+    </header>
+    <div style="height:8px;background:#d5e8de"></div>
+
+    <main style="padding:24px 28px 56px;max-width:1320px;width:100%;display:flex;flex-direction:column;gap:20px">
+
+      <!-- DASHBOARD -->
+      <sc-if value="{{ pgDash }}" hint-placeholder-val="{{ true }}">
+        <sc-if value="{{ showBanner }}" hint-placeholder-val="{{ true }}">
+          <div style="border-radius:18px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;background:#fff6e5;border:1px solid #f3c98d;color:#7a3a00;font-size:14px;line-height:1.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"></path></svg>
+            <div><div style="font-weight:700">{{ expiringCount }} warranties expire in the next 30 days</div><div>Raise renewals now or plan replacements. <button type="button" onClick="{{ goExpiring }}" style="background:none;border:none;padding:0;color:#7a3a00;font-weight:600;text-decoration:underline;font-size:inherit">Review expiring assets</button></div></div>
+          </div>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="5">
+            <button type="button" onClick="{{ s.go }}" style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:16px 18px;display:flex;flex-direction:column;gap:2px;text-align:left" style-hover="border-color:#1b8463">
+              <span style="font-size:12px;font-weight:700;color:#555">{{ s.label }}</span>
+              <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:30px;line-height:1.2;font-variant-numeric:tabular-nums;color:{{ s.color }}">{{ s.value }}</span>
+              <span style="font-size:12px;color:#777">{{ s.sub }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:20px;align-items:start">
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px">
+            <div style="font-size:18px;font-weight:700;margin-bottom:4px">Assets by type</div>
+            <p style="color:#666;font-size:14px;line-height:1.5;margin-bottom:14px">Assigned share shown in green.</p>
+            <sc-for list="{{ byType }}" as="t" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:150px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:13px;padding:5px 0">
+                <span>{{ t.label }}</span>
+                <div style="height:12px;background:#eef0f2;border-radius:999px;overflow:hidden"><div style="height:100%;background:#1b8463;border-radius:999px;width:{{ t.pct }}"></div></div>
+                <span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">{{ t.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px"><div style="font-size:18px;font-weight:700">Recent activity</div><button type="button" onClick="{{ goAudit }}" style="background:none;border:none;padding:0;color:#1b8463;font-weight:600;text-decoration:underline;font-size:13px">Full log</button></div>
+            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;position:relative">
+              <sc-for list="{{ recent }}" as="e" hint-placeholder-count="5">
+                <li style="display:flex;gap:12px;align-items:center;font-size:13px;color:#555">
+                  <span style="width:32px;height:32px;border-radius:999px;background:#fff;border:2px solid #e3e5e8;display:grid;place-items:center;color:#777;flex-shrink:0;font-size:11px;font-weight:700">{{ e.who }}</span>
+                  <span style="flex:1;min-width:0"><strong style="color:#444">{{ e.action }}</strong> · <button type="button" onClick="{{ e.open }}" style="background:none;border:none;padding:0;color:#1b8463;font-weight:600;font-size:13px">{{ e.tag }}</button> {{ e.detail }}</span>
+                  <time style="color:#777;font-size:12px;white-space:nowrap">{{ e.when }}</time>
+                </li>
+              </sc-for>
+            </ul>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- INVENTORY -->
+      <sc-if value="{{ pgAssets }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ typeTabs }}" as="t" hint-placeholder-count="7">
+            <button type="button" onClick="{{ t.go }}" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;min-height:40px">{{ t.label }}<span style="border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700;background:{{ t.cbg }};color:{{ t.cfg }}">{{ t.count }}</span></button>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);overflow:hidden">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:16px 18px;border-bottom:1px solid #eef0f2">
+            <div style="flex:2 1 240px;display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:13px;font-weight:600;color:#444">Search</label>
+              <div style="position:relative"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#777;pointer-events:none"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input value="{{ search }}" onChange="{{ setSearch }}" placeholder="Tag, model, serial or person" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px 10px 38px;font-size:14px;color:#333;background:#fff;min-height:42px"></div>
+            </div>
+            <div style="flex:1 1 160px;max-width:240px;display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:13px;font-weight:600;color:#444">Status</label>
+              <select value="{{ statusFilter }}" onChange="{{ setStatus }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;color:#333;background:#fff;min-height:42px"><option value="all">All statuses</option><option value="Assigned">Assigned</option><option value="In stock">In stock</option><option value="In repair">In repair</option><option value="Retired">Retired</option></select>
+            </div>
+            <div style="flex:1 1 160px;max-width:240px;display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:13px;font-weight:600;color:#444">Location</label>
+              <select value="{{ locFilter }}" onChange="{{ setLoc }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;color:#333;background:#fff;min-height:42px"><option value="all">All locations</option><option>Stafford HQ</option><option>London</option><option>Remote</option><option>Store room</option></select>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead><tr style="background:#f2f8f5;font-size:12px;font-weight:700;color:#444">
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Asset tag</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Asset</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Type</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Status</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Assigned to</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Location</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Warranty</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                  <tr onClick="{{ r.open }}" style="cursor:pointer" style-hover="background:#f4f9f6">
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;box-shadow:{{ r.edge }}">{{ r.tag }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;min-width:220px"><span style="font-weight:600;color:#333">{{ r.name }}</span><span style="display:block;font-size:12px;color:#777;margin-top:2px">{{ r.serial }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ r.type }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid {{ r.sbd }};background:{{ r.sbg }};color:{{ r.sfg }}">{{ r.status }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ r.owner }}<span style="display:block;font-size:12px;color:#777;margin-top:2px">{{ r.dept }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ r.location }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap;font-weight:{{ r.wweight }};color:{{ r.wcolor }}">{{ r.warrantyLabel }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{ noRows }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:36px 28px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center">
+              <div style="width:56px;height:56px;border-radius:999px;background:#f2f8f5;color:#1b8463;display:grid;place-items:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></div>
+              <h3 style="font-size:17px;margin:0">No assets match</h3>
+              <p style="color:#555">Try a different search or clear the filters.</p>
+              <button type="button" onClick="{{ clearFilters }}" style="border-radius:999px;padding:6px 14px;font-size:13px;min-height:36px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6">Clear filters</button>
+            </div>
+          </sc-if>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;font-size:13px;color:#555"><span>{{ rowSummary }}</span><span>Sorted by asset tag</span></div>
+        </div>
+      </sc-if>
+
+      <!-- DETAIL -->
+      <sc-if value="{{ pgDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);overflow:hidden">
+          <div style="padding:20px 24px;display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+            <div style="flex:1;min-width:240px">
+              <div style="font-size:13px;font-weight:700;color:#555;font-variant-numeric:tabular-nums">{{ a.tag }} · {{ a.type }}</div>
+              <h2 style="font-size:22px;font-weight:700;line-height:1.3;margin-top:4px">{{ a.name }}</h2>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+                <span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid {{ a.sbd }};background:{{ a.sbg }};color:{{ a.sfg }}">{{ a.status }}</span>
+                <span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid #cdd2d6;color:#555;background:#fff">{{ a.location }}</span>
+                <sc-if value="{{ a.warnSoon }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#fdecd9;color:#a34a00">Warranty ends {{ a.warrantyLabel }}</span></sc-if>
+                <sc-if value="{{ a.warnLate }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#fff;color:#a8102a;border:1px solid #a8102a">Out of warranty</span></sc-if>
+              </div>
+            </div>
+            <sc-if value="{{ canEdit }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px;flex-wrap:wrap">
+              <sc-if value="{{ a.isAssigned }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ unassign }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Unassign</button></sc-if>
+              <sc-if value="{{ a.canAssign }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ openAssign }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#1b8463;color:#fff;border:none" style-hover="background:#146b50">{{ a.assignLabel }}</button></sc-if>
+              <button type="button" onClick="{{ goEdit }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Edit</button>
+              <button type="button" onClick="{{ retire }}" style="border-radius:999px;padding:10px 12px;font-size:14px;font-weight:600;min-height:42px;background:transparent;color:#a8102a;border:none" style-hover="background:#fbe2e5">Retire</button>
+            </div></sc-if>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+            <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:18px 20px">
+              <div style="font-size:15px;font-weight:700;margin-bottom:10px">Details</div>
+              <sc-for list="{{ a.kv }}" as="k" hint-placeholder-count="8">
+                <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #eef0f2;font-size:13px"><span style="color:#666;width:140px;flex-shrink:0">{{ k.k }}</span><strong style="font-weight:600;overflow-wrap:anywhere">{{ k.v }}</strong></div>
+              </sc-for>
+            </div>
+            <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:18px 20px">
+              <div style="font-size:15px;font-weight:700;margin-bottom:10px">History</div>
+              <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;position:relative">
+                <div style="position:absolute;left:15px;top:8px;bottom:8px;width:2px;background:#e3e5e8"></div>
+                <sc-for list="{{ a.history }}" as="e" hint-placeholder-count="4">
+                  <li style="display:flex;gap:12px;align-items:center;font-size:13px;color:#555;position:relative">
+                    <span style="width:32px;height:32px;border-radius:999px;background:#fff;border:2px solid #e3e5e8;display:grid;place-items:center;color:#777;flex-shrink:0;font-size:11px;font-weight:700;z-index:1">{{ e.who }}</span>
+                    <span style="flex:1;min-width:0"><strong style="color:#444">{{ e.action }}</strong> {{ e.detail }}</span>
+                    <time style="color:#777;font-size:12px;white-space:nowrap">{{ e.when }}</time>
+                  </li>
+                </sc-for>
+              </ul>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+            <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:18px 20px">
+              <div style="font-size:15px;font-weight:700;margin-bottom:10px">Assignment</div>
+              <sc-if value="{{ a.isAssigned }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:12px;align-items:center">
+                  <span style="width:48px;height:48px;border-radius:999px;background:#d5e8de;color:#0d5c43;display:grid;place-items:center;font-size:16px;font-weight:700;flex-shrink:0">{{ a.ownerInit }}</span>
+                  <div style="min-width:0"><div style="font-weight:700;font-size:14px">{{ a.owner }}</div><div style="font-size:13px;color:#666">{{ a.dept }} · {{ a.ownerEmail }}</div></div>
+                </div>
+                <div style="display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #eef0f2;font-size:13px;margin-top:10px"><span style="color:#666;width:110px;flex-shrink:0">Assigned on</span><strong style="font-weight:600">{{ a.assignedOn }}</strong></div>
+                <div style="display:flex;gap:12px;padding:8px 0;font-size:13px"><span style="color:#666;width:110px;flex-shrink:0">Handover</span><strong style="font-weight:600">{{ a.handover }}</strong></div>
+              </sc-if>
+              <sc-if value="{{ a.notAssigned }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:13px;color:#555;line-height:1.5">Nobody holds this asset. It is listed under <strong>{{ a.location }}</strong>.</p>
+              </sc-if>
+            </div>
+            <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:18px 20px">
+              <div style="font-size:15px;font-weight:700;margin-bottom:10px">Lifecycle</div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:6px"><span>Purchased {{ a.purchased }}</span><span>Warranty {{ a.warrantyLabel }}</span></div>
+              <div style="height:8px;background:#eef0f2;border-radius:999px;overflow:hidden"><div style="height:100%;border-radius:999px;width:{{ a.lifePct }};background:{{ a.lifeColor }}"></div></div>
+              <p style="font-size:12px;color:#777;margin-top:8px;line-height:1.5">{{ a.lifeNote }}</p>
+            </div>
+            <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:18px 20px">
+              <div style="font-size:15px;font-weight:700;margin-bottom:10px">Linked tickets</div>
+              <sc-for list="{{ a.tickets }}" as="t" hint-placeholder-count="2">
+                <div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #eef0f2;font-size:13px"><span style="font-weight:700;font-variant-numeric:tabular-nums">{{ t.id }}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.subj }}</span><span style="display:inline-flex;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:{{ t.bg }};color:{{ t.fg }}">{{ t.st }}</span></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- FORM -->
+      <sc-if value="{{ pgForm }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px;align-items:start">
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px;display:flex;flex-direction:column;gap:18px">
+            <div><div style="font-size:18px;font-weight:700">{{ formTitle }}</div><p style="color:#666;font-size:14px;line-height:1.5;margin-top:4px">Fields marked <span style="color:#d0202f">*</span> are required. The asset tag is generated when you save.</p></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px 18px">
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Type <span style="color:#d0202f">*</span></label><select value="{{ f.type }}" onChange="{{ fType }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option>Laptop</option><option>Monitor</option><option>Phone</option><option>Peripheral</option><option>Software licence</option><option>Network gear</option></select></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Status</label><select value="{{ f.status }}" onChange="{{ fStatus }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option>In stock</option><option>Assigned</option><option>In repair</option><option>Retired</option></select></div>
+              <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Make and model <span style="color:#d0202f">*</span></label><input value="{{ f.name }}" onChange="{{ fName }}" placeholder="e.g. Dell Latitude 5540" style="width:100%;border:1px solid {{ f.nameBd }};border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><sc-if value="{{ f.nameErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#a8102a">Enter the make and model.</span></sc-if></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Serial number</label><input value="{{ f.serial }}" onChange="{{ fSerial }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Location</label><select value="{{ f.location }}" onChange="{{ fLocation }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option>Store room</option><option>Stafford HQ</option><option>London</option><option>Remote</option></select></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Purchase date</label><input type="date" value="{{ f.purchased }}" onChange="{{ fPurchased }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Warranty ends</label><input type="date" value="{{ f.warranty }}" onChange="{{ fWarranty }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Supplier</label><input value="{{ f.supplier }}" onChange="{{ fSupplier }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Cost (£)</label><input value="{{ f.cost }}" onChange="{{ fCost }}" inputMode="decimal" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+              <div style="grid-column:1/-1;display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Notes</label><textarea value="{{ f.notes }}" onChange="{{ fNotes }}" rows="3" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;line-height:1.5;resize:vertical"></textarea></div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;border-top:1px solid #eef0f2;padding-top:16px">
+              <button type="button" onClick="{{ cancelForm }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Cancel</button>
+              <button type="button" onClick="{{ saveForm }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#1b8463;color:#fff;border:none" style-hover="background:#146b50">{{ saveLabel }}</button>
+            </div>
+          </div>
+          <div style="border-radius:18px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;background:#f2f8f5;border:1px solid #d5e8de;color:#0d5c43;font-size:14px;line-height:1.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="9"></circle><path d="M12 8h.01M11 12h1v4h1"></path></svg>
+            <div><div style="font-weight:700">Tagging</div>Tags follow the pattern TS-TYPE-0000. A printable label is generated once the record is saved.</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- AUDIT -->
+      <sc-if value="{{ pgAudit }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);overflow:hidden">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid #eef0f2">
+            <sc-for list="{{ auditTabs }}" as="t" hint-placeholder-count="5">
+              <button type="button" onClick="{{ t.go }}" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;min-height:40px">{{ t.label }}</button>
+            </sc-for>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead><tr style="background:#f2f8f5;font-size:12px;font-weight:700;color:#444">
+              <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">When</th>
+              <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Event</th>
+              <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Asset</th>
+              <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Detail</th>
+              <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">By</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ auditRows }}" as="e" hint-placeholder-count="10">
+                <tr style-hover="background:#f4f9f6">
+                  <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap;color:#555">{{ e.when }}</td>
+                  <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;background:{{ e.bg }};color:{{ e.fg }}">{{ e.action }}</span></td>
+                  <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap"><button type="button" onClick="{{ e.open }}" style="background:none;border:none;padding:0;font-weight:700;color:#333;font-size:13px;text-decoration:none" style-hover="color:#0d5c43;text-decoration:underline">{{ e.tag }}</button><span style="display:block;font-size:12px;color:#777;margin-top:2px">{{ e.name }}</span></td>
+                  <td style="padding:10px 12px;border-bottom:1px solid #eef0f2">{{ e.detail }}</td>
+                  <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ e.byName }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:13px;color:#555"><span>{{ auditSummary }}</span><button type="button" style="border-radius:999px;padding:6px 14px;font-size:13px;min-height:36px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6">Export CSV</button></div>
+        </div>
+      </sc-if>
+
+      <!-- EXPIRING -->
+      <sc-if value="{{ pgExpiring }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px">
+          <sc-for list="{{ expStats }}" as="s" hint-placeholder-count="4">
+            <button type="button" onClick="{{ s.go }}" style="background:#fff;border:1px solid {{ s.bd }};border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:16px 18px;display:flex;flex-direction:column;gap:2px;text-align:left" style-hover="border-color:#1b8463">
+              <span style="font-size:12px;font-weight:700;color:#555">{{ s.label }}</span>
+              <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:30px;line-height:1.2;font-variant-numeric:tabular-nums;color:{{ s.color }}">{{ s.value }}</span>
+              <span style="font-size:12px;color:#777">{{ s.sub }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);overflow:hidden">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:16px 18px;border-bottom:1px solid #eef0f2">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;flex:1">
+              <sc-for list="{{ expTabs }}" as="t" hint-placeholder-count="4">
+                <button type="button" onClick="{{ t.go }}" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;min-height:40px">{{ t.label }}<span style="border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700;background:{{ t.cbg }};color:{{ t.cfg }}">{{ t.count }}</span></button>
+              </sc-for>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#444;cursor:pointer"><input type="checkbox" checked="{{ hideDecided }}" onChange="{{ toggleDecided }}" style="accent-color:#1b8463;width:18px;height:18px;margin:0">Hide decided</label>
+          </div>
+          <sc-if value="{{ expSelectedCount }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 18px;background:#f2f8f5;border-bottom:1px solid #d5e8de;font-size:13px;font-weight:600;color:#0d5c43">
+              <span style="flex:1">{{ expSelectedCount }} selected</span>
+              <button type="button" onClick="{{ bulkRenew }}" style="border-radius:999px;padding:6px 14px;font-size:13px;min-height:36px;background:#1b8463;color:#fff;border:none" style-hover="background:#146b50">Raise renewals</button>
+              <button type="button" onClick="{{ bulkReplace }}" style="border-radius:999px;padding:6px 14px;font-size:13px;min-height:36px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Plan replacement</button>
+              <button type="button" onClick="{{ bulkClear }}" style="background:none;border:none;padding:6px 8px;color:#1b8463;font-weight:600;text-decoration:underline;font-size:13px">Clear</button>
+            </div>
+          </sc-if>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead><tr style="background:#f2f8f5;font-size:12px;font-weight:700;color:#444">
+                <th style="width:44px;padding:10px 12px;border-bottom:2px solid #1b8463"><input type="checkbox" checked="{{ expAllChecked }}" onChange="{{ toggleAllExp }}" aria-label="Select all" style="accent-color:#1b8463;width:18px;height:18px;margin:0;display:block"></th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Asset tag</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Asset</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Held by</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Cover ends</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Days left</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Replace cost</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Decision</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ expRows }}" as="r" hint-placeholder-count="6">
+                  <tr style="background:{{ r.rowBg }}" style-hover="background:#f4f9f6">
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;box-shadow:{{ r.edge }}"><input type="checkbox" checked="{{ r.checked }}" onChange="{{ r.toggle }}" aria-label="Select {{ r.tag }}" style="accent-color:#1b8463;width:18px;height:18px;margin:0;display:block"></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap"><button type="button" onClick="{{ r.open }}" style="background:none;border:none;padding:0;font-weight:700;color:#333;font-size:13px;font-variant-numeric:tabular-nums" style-hover="color:#0d5c43;text-decoration:underline">{{ r.tag }}</button></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;min-width:200px"><span style="font-weight:600">{{ r.name }}</span><span style="display:block;font-size:12px;color:#777;margin-top:2px">{{ r.type }} · {{ r.supplier }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ r.owner }}<span style="display:block;font-size:12px;color:#777;margin-top:2px">{{ r.location }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ r.warrantyDate }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid {{ r.dbd }};background:{{ r.dbg }};color:{{ r.dfg }}">{{ r.daysLabel }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap;font-variant-numeric:tabular-nums">{{ r.replaceCost }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;min-width:260px">
+                      <div style="display:flex;gap:6px;flex-wrap:wrap">
+                        <sc-for list="{{ r.decisions }}" as="d" hint-placeholder-count="3">
+                          <button type="button" onClick="{{ d.go }}" style="border:1.5px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};border-radius:999px;padding:5px 12px;font-size:12px;font-weight:600;min-height:32px">{{ d.label }}</button>
+                        </sc-for>
+                      </div>
+                      <sc-if value="{{ r.decidedNote }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-size:12px;color:#0d5c43;margin-top:4px">{{ r.decidedNote }}</span></sc-if>
+                    </td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{ expEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:36px 28px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center">
+              <div style="width:56px;height:56px;border-radius:999px;background:#f2f8f5;color:#1b8463;display:grid;place-items:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></div>
+              <h3 style="font-size:17px;margin:0">Nothing waiting here</h3>
+              <p style="color:#555">Every asset in this window has a decision.</p>
+            </div>
+          </sc-if>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;font-size:13px;color:#555"><span>{{ expSummary }}</span><button type="button" onClick="{{ exportExp }}" style="border-radius:999px;padding:6px 14px;font-size:13px;min-height:36px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Export CSV</button></div>
+        </div>
+      </sc-if>
+
+      <!-- USERS -->
+      <sc-if value="{{ pgUsers }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px">
+          <sc-for list="{{ userStats }}" as="s" hint-placeholder-count="4">
+            <button type="button" onClick="{{ s.go }}" style="background:#fff;border:1px solid {{ s.bd }};border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:16px 18px;display:flex;flex-direction:column;gap:2px;text-align:left" style-hover="border-color:#1b8463">
+              <span style="font-size:12px;font-weight:700;color:#555">{{ s.label }}</span>
+              <span style="font-family:Montserrat,sans-serif;font-weight:800;font-size:30px;line-height:1.2;font-variant-numeric:tabular-nums;color:#0d4a37">{{ s.value }}</span>
+              <span style="font-size:12px;color:#777">{{ s.sub }}</span>
+            </button>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);overflow:hidden">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:16px 18px;border-bottom:1px solid #eef0f2">
+            <div style="flex:2 1 240px;display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:13px;font-weight:600;color:#444">Search</label>
+              <div style="position:relative"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#777;pointer-events:none"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input value="{{ userSearch }}" onChange="{{ setUserSearch }}" placeholder="Name or email" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px 10px 38px;font-size:14px;color:#333;background:#fff;min-height:42px"></div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <sc-for list="{{ roleTabs }}" as="t" hint-placeholder-count="4">
+                <button type="button" onClick="{{ t.go }}" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;min-height:40px">{{ t.label }}<span style="border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700;background:{{ t.cbg }};color:{{ t.cfg }}">{{ t.count }}</span></button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead><tr style="background:#f2f8f5;font-size:12px;font-weight:700;color:#444">
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">User</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Role</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Department</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Status</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Last active</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Last changed</th>
+                <th style="padding:10px 12px;border-bottom:2px solid #1b8463"></th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ userRows }}" as="u" hint-placeholder-count="6">
+                  <tr onClick="{{ u.open }}" style="cursor:pointer" style-hover="background:#f4f9f6">
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;min-width:220px"><div style="display:flex;gap:10px;align-items:center"><span style="width:32px;height:32px;border-radius:999px;background:{{ u.avBg }};color:{{ u.avFg }};display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0">{{ u.init }}</span><div style="min-width:0"><div style="font-weight:600">{{ u.name }}</div><div style="font-size:12px;color:#777">{{ u.email }}</div></div></div></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid {{ u.rbd }};background:{{ u.rbg }};color:{{ u.rfg }}">{{ u.role }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ u.dept }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;border:1px solid {{ u.sbd }};background:{{ u.sbg }};color:{{ u.sfg }}">{{ u.statusLabel }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap;color:#555">{{ u.lastActive }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap;color:#555">{{ u.lastChanged }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;text-align:right;white-space:nowrap"><button type="button" onClick="{{ u.edit }}" style="border-radius:999px;padding:6px 14px;font-size:13px;min-height:36px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Edit</button></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;font-size:13px;color:#555"><span>{{ userSummary }}</span><span>Invites expire after 7 days</span></div>
+        </div>
+      </sc-if>
+
+      <!-- USER FORM -->
+      <sc-if value="{{ pgUserForm }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px;align-items:start">
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px;display:flex;flex-direction:column;gap:18px">
+            <div><div style="font-size:18px;font-weight:700">{{ userFormTitle }}</div><p style="color:#666;font-size:14px;line-height:1.5;margin-top:4px">{{ userFormLede }}</p></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px 18px">
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Full name <span style="color:#d0202f">*</span></label><input value="{{ uf.name }}" onChange="{{ ufName }}" style="width:100%;border:1px solid {{ uf.nameBd }};border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><sc-if value="{{ uf.nameErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#a8102a">Enter the person's name.</span></sc-if></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Work email <span style="color:#d0202f">*</span></label><input type="email" value="{{ uf.email }}" onChange="{{ ufEmail }}" placeholder="name@topcashback.co.uk" style="width:100%;border:1px solid {{ uf.emailBd }};border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><sc-if value="{{ uf.emailErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#a8102a">{{ uf.emailErr }}</span></sc-if></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Department</label><select value="{{ uf.dept }}" onChange="{{ ufDept }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option>IT Support</option><option>Finance</option><option>People</option><option>Engineering</option><option>Operations</option><option>Commercial</option></select></div>
+              <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Location</label><select value="{{ uf.location }}" onChange="{{ ufLocation }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option>Stafford HQ</option><option>London</option><option>Remote</option></select></div>
+            </div>
+            <fieldset style="border:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+              <legend style="font-size:13px;font-weight:600;color:#444;padding:0;margin-bottom:8px">Role <span style="color:#d0202f">*</span></legend>
+              <sc-for list="{{ roleOpts }}" as="r" hint-placeholder-count="3">
+                <label style="display:flex;gap:12px;align-items:flex-start;border:1.5px solid {{ r.bd }};border-radius:14px;padding:12px 14px;cursor:pointer;background:{{ r.bg }}" style-hover="background:#f4f9f6">
+                  <input type="radio" name="role" checked="{{ r.on }}" onChange="{{ r.go }}" style="accent-color:#1b8463;width:18px;height:18px;margin:2px 0 0;flex-shrink:0">
+                  <span><span style="display:block;font-size:14px;font-weight:700">{{ r.label }}</span><span style="display:block;font-size:13px;color:#666;margin-top:2px;line-height:1.4">{{ r.desc }}</span></span>
+                </label>
+              </sc-for>
+            </fieldset>
+            <div style="display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:14px 0;border-top:1px solid #eef0f2;border-bottom:1px solid #eef0f2">
+              <div style="flex:1;min-width:220px"><strong style="display:block;font-size:14px">Account active</strong><span style="font-size:13px;color:#666">Inactive users keep their history but cannot sign in.</span></div>
+              <div style="display:flex;gap:6px"><sc-for list="{{ activeOpts }}" as="o" hint-placeholder-count="2"><button type="button" onClick="{{ o.go }}" style="min-width:64px;border:1.5px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};border-radius:999px;padding:7px 16px;font-size:13px;font-weight:600;min-height:38px">{{ o.label }}</button></sc-for></div>
+            </div>
+            <sc-if value="{{ uf.isNew }}" hint-placeholder-val="{{ true }}">
+              <label style="display:flex;gap:12px;align-items:flex-start;border:1.5px solid {{ uf.inviteBd }};border-radius:14px;padding:12px 14px;cursor:pointer;background:{{ uf.inviteBg }}"><input type="checkbox" checked="{{ uf.invite }}" onChange="{{ ufInvite }}" style="accent-color:#1b8463;width:18px;height:18px;margin:2px 0 0"><span><span style="display:block;font-size:14px;font-weight:700">Send sign-in invitation now</span><span style="display:block;font-size:13px;color:#666;margin-top:2px">They set a password from the email link. Untick to create the account silently.</span></span></label>
+            </sc-if>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+              <button type="button" onClick="{{ cancelUserForm }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Cancel</button>
+              <button type="button" onClick="{{ saveUser }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#1b8463;color:#fff;border:none" style-hover="background:#146b50">{{ uf.saveLabel }}</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:18px 20px">
+              <div style="font-size:15px;font-weight:700;margin-bottom:10px">What each role can do</div>
+              <sc-for list="{{ permRows }}" as="p" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:minmax(0,1fr) 34px 34px 34px;gap:4px;align-items:center;padding:7px 0;border-bottom:1px solid #eef0f2;font-size:13px">
+                  <span>{{ p.label }}</span>
+                  <span style="display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:{{ p.t.bg }};color:{{ p.t.fg }};border:1.5px solid {{ p.t.bd }};font-size:12px;font-weight:700">{{ p.t.mark }}</span>
+                  <span style="display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:{{ p.a.bg }};color:{{ p.a.fg }};border:1.5px solid {{ p.a.bd }};font-size:12px;font-weight:700">{{ p.a.mark }}</span>
+                  <span style="display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:{{ p.r.bg }};color:{{ p.r.fg }};border:1.5px solid {{ p.r.bd }};font-size:12px;font-weight:700">{{ p.r.mark }}</span>
+                </div>
+              </sc-for>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) 34px 34px 34px;gap:4px;font-size:11px;color:#777;margin-top:6px;text-align:center"><span></span><span>Tech</span><span>Adm</span><span>Read</span></div>
+            </div>
+            <sc-if value="{{ uf.isEdit }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:18px 20px">
+                <div style="font-size:15px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;gap:8px"><span>Recent changes</span><button type="button" onClick="{{ openUserAudit }}" style="background:none;border:none;padding:0;color:#1b8463;font-weight:600;text-decoration:underline;font-size:13px">Full history</button></div>
+                <sc-for list="{{ ufRecent }}" as="c" hint-placeholder-count="3">
+                  <div style="padding:8px 0;border-bottom:1px solid #eef0f2;font-size:13px"><div><strong>{{ c.field }}</strong> <span style="color:#777">{{ c.when }} · {{ c.byName }}</span></div><div style="margin-top:3px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="text-decoration:line-through;color:#777">{{ c.oldLabel }}</span><span style="color:#777">→</span><span style="font-weight:600;color:#0d5c43">{{ c.newLabel }}</span></div></div>
+                </sc-for>
+                <sc-if value="{{ ufNoRecent }}" hint-placeholder-val="{{ false }}"><p style="font-size:13px;color:#666">No changes since the account was created.</p></sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- USER AUDIT -->
+      <sc-if value="{{ pgUserAudit }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:20px 24px;display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <span style="width:48px;height:48px;border-radius:999px;background:{{ ua.avBg }};color:{{ ua.avFg }};display:grid;place-items:center;font-size:16px;font-weight:700;flex-shrink:0">{{ ua.init }}</span>
+          <div style="flex:1;min-width:220px"><h2 style="font-size:22px;font-weight:700;line-height:1.3">{{ ua.name }}</h2><div style="font-size:13px;color:#666;margin-top:2px">{{ ua.email }} · {{ ua.dept }} · {{ ua.location }}</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid {{ ua.rbd }};background:{{ ua.rbg }};color:{{ ua.rfg }}">{{ ua.role }}</span>
+            <span style="display:inline-flex;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid {{ ua.sbd }};background:{{ ua.sbg }};color:{{ ua.sfg }}">{{ ua.statusLabel }}</span>
+            <button type="button" onClick="{{ ua.edit }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Edit user</button>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);overflow:hidden">
+          <div style="padding:16px 18px;border-bottom:1px solid #eef0f2;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center"><div><div style="font-size:18px;font-weight:700">Change history</div><p style="color:#666;font-size:14px;margin-top:2px">Every field change to this account, with the value before and after.</p></div><span style="font-size:13px;color:#555">{{ ua.changeCount }}</span></div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead><tr style="background:#f2f8f5;font-size:12px;font-weight:700;color:#444">
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">When</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Field</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Before</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">After</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Changed by</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Reason</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ ua.changes }}" as="c" hint-placeholder-count="5">
+                  <tr style-hover="background:#f4f9f6">
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap;color:#555">{{ c.whenFull }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;font-weight:600;white-space:nowrap">{{ c.field }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;background:#fbe2e5;color:#a8102a;text-decoration:line-through;white-space:nowrap">{{ c.oldLabel }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;background:#d8eee2;color:#0d5c43;white-space:nowrap">{{ c.newLabel }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ c.byName }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;color:#555">{{ c.reason }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{ ua.noChanges }}" hint-placeholder-val="{{ false }}"><div style="padding:28px;text-align:center;color:#555;font-size:14px">No changes recorded yet.</div></sc-if>
+        </div>
+      </sc-if>
+
+      <!-- RECORD CHANGES -->
+      <sc-if value="{{ pgChanges }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);overflow:hidden">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:16px 18px;border-bottom:1px solid #eef0f2">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;flex:1">
+              <sc-for list="{{ changeTabs }}" as="t" hint-placeholder-count="3">
+                <button type="button" onClick="{{ t.go }}" style="display:inline-flex;align-items:center;gap:8px;border:1.5px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:7px 16px;font-size:14px;font-weight:600;min-height:40px">{{ t.label }}<span style="border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700;background:{{ t.cbg }};color:{{ t.cfg }}">{{ t.count }}</span></button>
+              </sc-for>
+            </div>
+            <div style="flex:1 1 160px;max-width:220px;display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:13px;font-weight:600;color:#444">Changed by</label>
+              <select value="{{ changeBy }}" onChange="{{ setChangeBy }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option value="all">Anyone</option><option value="JM">Jo Mensah</option><option value="RK">Rhea Kaur</option><option value="SYS">System</option></select>
+            </div>
+            <div style="flex:1 1 160px;max-width:220px;display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:13px;font-weight:600;color:#444">Period</label>
+              <select value="{{ changePeriod }}" onChange="{{ setChangePeriod }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="all">All time</option></select>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead><tr style="background:#f2f8f5;font-size:12px;font-weight:700;color:#444">
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">When</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Record</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Field</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">Before</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463">After</th>
+                <th style="text-align:left;padding:10px 12px;border-bottom:2px solid #1b8463;white-space:nowrap">Changed by</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ changeRows }}" as="c" hint-placeholder-count="10">
+                  <tr style-hover="background:#f4f9f6">
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap;color:#555">{{ c.whenFull }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap"><div style="display:flex;gap:8px;align-items:center"><span style="display:inline-flex;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:{{ c.kbg }};color:{{ c.kfg }}">{{ c.kindLabel }}</span><button type="button" onClick="{{ c.open }}" style="background:none;border:none;padding:0;font-weight:700;color:#333;font-size:13px" style-hover="color:#0d5c43;text-decoration:underline">{{ c.recordLabel }}</button></div><span style="display:block;font-size:12px;color:#777;margin-top:2px">{{ c.recordSub }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;font-weight:600;white-space:nowrap">{{ c.field }}</td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;background:#fbe2e5;color:#a8102a;text-decoration:line-through;white-space:nowrap">{{ c.oldLabel }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2"><span style="display:inline-flex;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;background:#d8eee2;color:#0d5c43;white-space:nowrap">{{ c.newLabel }}</span></td>
+                    <td style="padding:10px 12px;border-bottom:1px solid #eef0f2;white-space:nowrap">{{ c.byName }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{ changesEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:28px;text-align:center;color:#555;font-size:14px">No field changes match these filters.</div></sc-if>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 16px;font-size:13px;color:#555"><span>{{ changeSummary }}</span><button type="button" onClick="{{ exportChanges }}" style="border-radius:999px;padding:6px 14px;font-size:13px;min-height:36px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Export CSV</button></div>
+        </div>
+      </sc-if>
+
+      <!-- REPORTS -->
+      <sc-if value="{{ pgReports }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:20px;align-items:start">
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px">
+            <div style="font-size:18px;font-weight:700;margin-bottom:4px">Warranty forecast</div>
+            <p style="color:#666;font-size:14px;line-height:1.5;margin-bottom:14px">Assets whose cover ends in each quarter.</p>
+            <sc-for list="{{ forecast }}" as="q" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:110px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:13px;padding:5px 0">
+                <span>{{ q.label }}</span>
+                <div style="height:12px;background:#eef0f2;border-radius:999px;overflow:hidden"><div style="height:100%;border-radius:999px;width:{{ q.pct }};background:{{ q.color }}"></div></div>
+                <span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">{{ q.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px">
+            <div style="font-size:18px;font-weight:700;margin-bottom:4px">Status mix</div>
+            <p style="color:#666;font-size:14px;line-height:1.5;margin-bottom:14px">Where every asset stands today.</p>
+            <sc-for list="{{ byStatus }}" as="s" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:110px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:13px;padding:5px 0">
+                <span>{{ s.label }}</span>
+                <div style="height:12px;background:#eef0f2;border-radius:999px;overflow:hidden"><div style="height:100%;border-radius:999px;width:{{ s.pct }};background:{{ s.color }}"></div></div>
+                <span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">{{ s.count }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px">
+            <div style="font-size:18px;font-weight:700;margin-bottom:4px">Licence utilisation</div>
+            <p style="color:#666;font-size:14px;line-height:1.5;margin-bottom:14px">Seats in use against seats purchased.</p>
+            <sc-for list="{{ licences }}" as="l" hint-placeholder-count="3">
+              <div style="display:grid;grid-template-columns:150px minmax(0,1fr) 72px;gap:10px;align-items:center;font-size:13px;padding:5px 0">
+                <span>{{ l.label }}</span>
+                <div style="height:12px;background:#eef0f2;border-radius:999px;overflow:hidden"><div style="height:100%;border-radius:999px;width:{{ l.pct }};background:{{ l.color }}"></div></div>
+                <span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">{{ l.used }} / {{ l.seats }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);padding:24px 28px">
+            <div style="font-size:18px;font-weight:700;margin-bottom:4px">Value by location</div>
+            <p style="color:#666;font-size:14px;line-height:1.5;margin-bottom:14px">Purchase cost of active assets.</p>
+            <sc-for list="{{ byLoc }}" as="l" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:110px minmax(0,1fr) 72px;gap:10px;align-items:center;font-size:13px;padding:5px 0">
+                <span>{{ l.label }}</span>
+                <div style="height:12px;background:#eef0f2;border-radius:999px;overflow:hidden"><div style="height:100%;background:#1b8463;border-radius:999px;width:{{ l.pct }}"></div></div>
+                <span style="text-align:right;font-weight:700;font-variant-numeric:tabular-nums">{{ l.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </main>
+  </div>
+</div>
+</sc-if>
+
+<!-- ASSIGN MODAL -->
+<sc-if value="{{ assignOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeAssign }}" style="position:fixed;inset:0;background:rgba(20,30,30,.45);z-index:80;display:grid;place-items:center;padding:16px">
+    <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="width:100%;max-width:560px;background:#fff;border:1px solid #e3e5e8;border-radius:22px;box-shadow:0 2px 10px rgba(20,30,40,.05);display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:20px 24px 12px;display:flex;align-items:flex-start;gap:12px"><h2 style="font-size:19px;font-weight:700;flex:1">Assign {{ a.tag }}</h2><button type="button" onClick="{{ closeAssign }}" aria-label="Close" style="width:40px;height:40px;border-radius:999px;border:1px solid #cdd2d6;background:#fff;display:grid;place-items:center;color:#3a3f44"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></div>
+      <div style="padding:4px 24px 18px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;background:#f6f7f8;border-radius:12px;padding:12px 14px;font-size:12px">
+          <div><span style="color:#666">Asset</span><br><strong style="font-size:13px;font-weight:600">{{ a.name }}</strong></div>
+          <div><span style="color:#666">Serial</span><br><strong style="font-size:13px;font-weight:600">{{ a.serial }}</strong></div>
+          <div><span style="color:#666">Currently</span><br><strong style="font-size:13px;font-weight:600">{{ a.ownerOrLoc }}</strong></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Employee <span style="color:#d0202f">*</span></label>
+          <select value="{{ as.person }}" onChange="{{ asPerson }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"><option value="">Choose a person</option><sc-for list="{{ people }}" as="p" hint-placeholder-count="6"><option value="{{ p.name }}">{{ p.name }} — {{ p.dept }}</option></sc-for></select>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px 18px">
+          <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Handover</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ handoverOpts }}" as="h" hint-placeholder-count="3"><button type="button" onClick="{{ h.go }}" style="min-width:64px;border:1.5px solid {{ h.bd }};background:{{ h.bg }};color:{{ h.fg }};border-radius:999px;padding:7px 16px;font-size:13px;font-weight:600;min-height:38px">{{ h.label }}</button></sc-for></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px"><label style="font-size:13px;font-weight:600;color:#444">Date</label><input type="date" value="{{ as.date }}" onChange="{{ asDate }}" style="width:100%;border:1px solid #cdd2d6;border-radius:10px;padding:10px 12px;font-size:14px;background:#fff;min-height:42px"></div>
+        </div>
+        <label style="display:flex;gap:12px;align-items:flex-start;border:1.5px solid {{ as.ackBd }};border-radius:14px;padding:12px 14px;cursor:pointer;background:{{ as.ackBg }}"><input type="checkbox" checked="{{ as.ack }}" onChange="{{ asAck }}" style="accent-color:#1b8463;width:18px;height:18px;margin:2px 0 0"><span><span style="display:block;font-size:14px;font-weight:700">Send acceptable-use acknowledgement</span><span style="display:block;font-size:13px;color:#666;margin-top:2px">The employee gets an email to confirm receipt and condition.</span></span></label>
+      </div>
+      <div style="padding:14px 24px;border-top:1px solid #eef0f2;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:#f6f7f8">
+        <button type="button" onClick="{{ closeAssign }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#fff;color:#3a3f44;border:1px solid #cdd2d6" style-hover="background:#f3f5f6">Cancel</button>
+        <button type="button" onClick="{{ confirmAssign }}" disabled="{{ as.disabled }}" style="border-radius:999px;padding:10px 20px;font-size:14px;font-weight:600;min-height:42px;background:#1b8463;color:#fff;border:none;opacity:{{ as.opacity }}" style-hover="background:#146b50">Assign asset</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<!-- TOASTS -->
+<div style="position:fixed;right:16px;bottom:16px;z-index:90;display:flex;flex-direction:column;gap:8px;max-width:min(420px,calc(100vw - 32px))">
+  <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="0">
+    <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 16px;border-radius:14px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(20,30,40,.14);background:#0d4a37;color:#fff">{{ t.msg }}</div>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;requireSignIn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;showWarrantyBanner&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;startPage&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;dash&quot;,&quot;options&quot;:[&quot;dash&quot;,&quot;assets&quot;,&quot;detail&quot;,&quot;form&quot;,&quot;expiring&quot;,&quot;audit&quot;,&quot;reports&quot;,&quot;users&quot;,&quot;userForm&quot;,&quot;userAudit&quot;,&quot;changes&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Behaviour&quot;}}">
+const TODAY = new Date('2026-10-25');
+const TYPES = ['Laptop','Monitor','Phone','Peripheral','Software licence','Network gear'];
+const PEOPLE = [
+  {name:'Amara Okafor',dept:'Finance',email:'amara.o@topcashback.co.uk'},
+  {name:'Ben Whitlock',dept:'Marketing',email:'ben.w@topcashback.co.uk'},
+  {name:'Chloe Danvers',dept:'Engineering',email:'chloe.d@topcashback.co.uk'},
+  {name:'Dev Patel',dept:'Customer Care',email:'dev.p@topcashback.co.uk'},
+  {name:'Elena Rossi',dept:'People',email:'elena.r@topcashback.co.uk'},
+  {name:'Farid Haque',dept:'Engineering',email:'farid.h@topcashback.co.uk'},
+  {name:'Grace Lin',dept:'Commercial',email:'grace.l@topcashback.co.uk'},
+];
+const SEED = [
+  {tag:'TS-LAP-0412',type:'Laptop',name:'Dell Latitude 5540',serial:'7XK2Q93',status:'Assigned',owner:'Chloe Danvers',location:'Stafford HQ',purchased:'2024-03-11',warranty:'2027-03-11',supplier:'Dell Direct',cost:1189,assignedOn:'2024-03-14',handover:'In person'},
+  {tag:'TS-LAP-0419',type:'Laptop',name:'MacBook Air 15 M3',serial:'C02ZR4L1',status:'Assigned',owner:'Ben Whitlock',location:'London',purchased:'2024-06-02',warranty:'2026-11-08',supplier:'Apple Business',cost:1399,assignedOn:'2024-06-05',handover:'Courier'},
+  {tag:'TS-LAP-0433',type:'Laptop',name:'Lenovo ThinkPad T14 Gen 5',serial:'PF4R8T2M',status:'In stock',owner:'',location:'Store room',purchased:'2026-09-20',warranty:'2029-09-20',supplier:'Insight UK',cost:1245,assignedOn:'',handover:''},
+  {tag:'TS-LAP-0388',type:'Laptop',name:'Dell Latitude 5430',serial:'3GH7W12',status:'In repair',owner:'Dev Patel',location:'Stafford HQ',purchased:'2023-01-18',warranty:'2026-01-18',supplier:'Dell Direct',cost:1050,assignedOn:'2023-01-20',handover:'In person'},
+  {tag:'TS-MON-0201',type:'Monitor',name:'Dell U2723QE 27" 4K',serial:'CN0K8M2',status:'Assigned',owner:'Chloe Danvers',location:'Stafford HQ',purchased:'2024-03-11',warranty:'2027-03-11',supplier:'Dell Direct',cost:529,assignedOn:'2024-03-14',handover:'In person'},
+  {tag:'TS-MON-0218',type:'Monitor',name:'LG 34WN80C Ultrawide',serial:'LG34-88211',status:'In stock',owner:'',location:'Store room',purchased:'2025-02-02',warranty:'2028-02-02',supplier:'CCL',cost:449,assignedOn:'',handover:''},
+  {tag:'TS-PHN-0097',type:'Phone',name:'iPhone 15',serial:'F2LW9K7P',status:'Assigned',owner:'Grace Lin',location:'Remote',purchased:'2024-10-30',warranty:'2026-10-30',supplier:'EE Business',cost:799,assignedOn:'2024-11-01',handover:'Courier'},
+  {tag:'TS-PHN-0102',type:'Phone',name:'Samsung Galaxy S24',serial:'R5CX1A3',status:'Assigned',owner:'Amara Okafor',location:'Stafford HQ',purchased:'2025-01-15',warranty:'2027-01-15',supplier:'EE Business',cost:749,assignedOn:'2025-01-16',handover:'In person'},
+  {tag:'TS-PER-0510',type:'Peripheral',name:'Jabra Evolve2 65 headset',serial:'JB65-20311',status:'Assigned',owner:'Dev Patel',location:'Stafford HQ',purchased:'2025-05-12',warranty:'2027-05-12',supplier:'Insight UK',cost:189,assignedOn:'2025-05-12',handover:'In person'},
+  {tag:'TS-PER-0523',type:'Peripheral',name:'Logitech MX Keys + MX Master 3S',serial:'LGT-55102',status:'In stock',owner:'',location:'Store room',purchased:'2026-08-01',warranty:'2028-08-01',supplier:'CCL',cost:179,assignedOn:'',handover:''},
+  {tag:'TS-LIC-0031',type:'Software licence',name:'Adobe Creative Cloud (All apps)',serial:'ACC-TCB-2026',status:'Assigned',owner:'Ben Whitlock',location:'London',purchased:'2026-01-01',warranty:'2026-12-31',supplier:'Adobe',cost:660,assignedOn:'2026-01-01',handover:'Email'},
+  {tag:'TS-LIC-0034',type:'Software licence',name:'JetBrains All Products Pack',serial:'JB-TCB-5541',status:'Assigned',owner:'Farid Haque',location:'Remote',purchased:'2026-04-01',warranty:'2027-03-31',supplier:'JetBrains',cost:649,assignedOn:'2026-04-01',handover:'Email'},
+  {tag:'TS-NET-0012',type:'Network gear',name:'Ubiquiti USW-Pro-48-PoE',serial:'UBNT-7A2F',status:'Assigned',owner:'',location:'Stafford HQ',purchased:'2023-11-05',warranty:'2026-11-05',supplier:'Ubiquiti Store',cost:1099,assignedOn:'',handover:''},
+  {tag:'TS-NET-0015',type:'Network gear',name:'Meraki MX75 firewall',serial:'Q2PD-88LK',status:'Assigned',owner:'',location:'London',purchased:'2025-07-19',warranty:'2028-07-19',supplier:'Cisco',cost:1450,assignedOn:'',handover:''},
+  {tag:'TS-LAP-0301',type:'Laptop',name:'HP EliteBook 840 G8',serial:'5CG1Z8X',status:'Retired',owner:'',location:'Store room',purchased:'2021-06-10',warranty:'2024-06-10',supplier:'HP',cost:980,assignedOn:'',handover:''},
+];
+const SEED_LOG = [
+  {when:'2026-10-25T09:12',tag:'TS-LAP-0388',action:'Sent to repair',detail:'Keyboard failure, logged with Dell ProSupport',by:'JM'},
+  {when:'2026-10-24T16:40',tag:'TS-LAP-0433',action:'Added',detail:'Received from Insight UK, PO 48811',by:'JM'},
+  {when:'2026-10-23T11:05',tag:'TS-PER-0523',action:'Added',detail:'Received from CCL',by:'RK'},
+  {when:'2026-10-21T14:30',tag:'TS-PHN-0097',action:'Edited',detail:'Location changed Stafford HQ → Remote',by:'JM'},
+  {when:'2026-10-17T10:02',tag:'TS-LAP-0301',action:'Retired',detail:'Battery swollen, data wiped (cert #2211)',by:'RK'},
+  {when:'2026-10-09T09:45',tag:'TS-LIC-0034',action:'Audited',detail:'Seat confirmed active in JetBrains portal',by:'JM'},
+  {when:'2026-09-30T15:20',tag:'TS-NET-0012',action:'Audited',detail:'Firmware 7.0.50 applied',by:'RK'},
+  {when:'2025-05-12T12:00',tag:'TS-PER-0510',action:'Assigned',detail:'to Dev Patel · In person',by:'JM'},
+  {when:'2025-01-16T09:30',tag:'TS-PHN-0102',action:'Assigned',detail:'to Amara Okafor · In person',by:'RK'},
+  {when:'2024-06-05T10:10',tag:'TS-LAP-0419',action:'Assigned',detail:'to Ben Whitlock · Courier',by:'JM'},
+  {when:'2024-03-14T09:00',tag:'TS-LAP-0412',action:'Assigned',detail:'to Chloe Danvers · In person',by:'JM'},
+  {when:'2024-03-14T09:00',tag:'TS-MON-0201',action:'Assigned',detail:'to Chloe Danvers · In person',by:'JM'},
+];
+const BY = {JM:'Jo Mensah',RK:'Rhea Kaur',SYS:'System'};
+const SEED_USERS = [
+  {id:'u1',name:'Jo Mensah',email:'jo.mensah@topcashback.co.uk',role:'Admin',dept:'IT Support',location:'Stafford HQ',active:true,lastActive:'2026-10-25T09:40',created:'2023-02-01'},
+  {id:'u2',name:'Rhea Kaur',email:'rhea.kaur@topcashback.co.uk',role:'Technician',dept:'IT Support',location:'Stafford HQ',active:true,lastActive:'2026-10-24T17:10',created:'2024-05-13'},
+  {id:'u3',name:'Tom Adeyemi',email:'tom.adeyemi@topcashback.co.uk',role:'Technician',dept:'IT Support',location:'London',active:true,lastActive:'2026-10-23T12:02',created:'2025-09-08'},
+  {id:'u4',name:'Priya Shah',email:'priya.shah@topcashback.co.uk',role:'Read only',dept:'Finance',location:'Stafford HQ',active:true,lastActive:'2026-10-20T08:55',created:'2025-01-20'},
+  {id:'u5',name:'Marcus Reid',email:'marcus.reid@topcashback.co.uk',role:'Read only',dept:'People',location:'Remote',active:true,lastActive:'',created:'2026-10-22'},
+  {id:'u6',name:'Hannah Cole',email:'hannah.cole@topcashback.co.uk',role:'Technician',dept:'IT Support',location:'London',active:false,lastActive:'2026-07-30T16:20',created:'2023-11-02'},
+  {id:'u7',name:'Sam Okoro',email:'sam.okoro@topcashback.co.uk',role:'Admin',dept:'IT Support',location:'London',active:true,lastActive:'2026-10-24T08:15',created:'2024-01-09'},
+  {id:'u8',name:'Leah Barrett',email:'leah.barrett@topcashback.co.uk',role:'Technician',dept:'IT Support',location:'Remote',active:true,lastActive:'2026-10-25T07:50',created:'2026-03-17'},
+  {id:'u9',name:'Oliver Nkemelu',email:'oliver.nkemelu@topcashback.co.uk',role:'Read only',dept:'Operations',location:'Stafford HQ',active:true,lastActive:'2026-10-19T13:30',created:'2025-06-02'},
+];
+const DEMO = [
+  {id:'u2', tab:'tech', hint:'Stafford HQ'},
+  {id:'u3', tab:'tech', hint:'London'},
+  {id:'u8', tab:'tech', hint:'Remote'},
+  {id:'u1', tab:'admin', hint:'code 246810'},
+  {id:'u7', tab:'admin', hint:'code 246810'},
+  {id:'u4', tab:'tech', hint:'view only'},
+  {id:'u9', tab:'tech', hint:'view only'},
+];
+const SEED_CHANGES = [
+  {when:'2026-10-24T11:15',kind:'user',ref:'u2',field:'Role',oldV:'Read only',newV:'Technician',by:'JM',reason:'Joined IT Support rota'},
+  {when:'2026-10-22T09:30',kind:'user',ref:'u5',field:'Account',oldV:'—',newV:'Created',by:'JM',reason:'New starter, People team'},
+  {when:'2026-10-21T14:30',kind:'asset',ref:'TS-PHN-0097',field:'Location',oldV:'Stafford HQ',newV:'Remote',by:'JM',reason:''},
+  {when:'2026-10-17T10:02',kind:'asset',ref:'TS-LAP-0301',field:'Status',oldV:'In stock',newV:'Retired',by:'RK',reason:'Battery swollen'},
+  {when:'2026-10-14T16:45',kind:'user',ref:'u4',field:'Department',oldV:'Operations',newV:'Finance',by:'SYS',reason:'HR directory sync'},
+  {when:'2026-10-09T09:45',kind:'asset',ref:'TS-LIC-0034',field:'Warranty ends',oldV:'31 Mar 2026',newV:'31 Mar 2027',by:'JM',reason:'Renewed'},
+  {when:'2026-09-30T15:20',kind:'asset',ref:'TS-NET-0012',field:'Notes',oldV:'—',newV:'Firmware 7.0.50',by:'RK',reason:''},
+  {when:'2026-08-01T09:00',kind:'user',ref:'u6',field:'Account active',oldV:'Yes',newV:'No',by:'JM',reason:'Left the company'},
+  {when:'2026-06-12T10:20',kind:'user',ref:'u3',field:'Location',oldV:'Stafford HQ',newV:'London',by:'RK',reason:'Office move'},
+  {when:'2026-03-03T13:05',kind:'asset',ref:'TS-LAP-0412',field:'Purchase cost',oldV:'£1,099',newV:'£1,189',by:'SYS',reason:'Invoice correction'},
+];
+const ROLE_STYLE = {'Admin':{bg:'#1b8463',fg:'#fff',bd:'#1b8463'},'Technician':{bg:'#d8eee2',fg:'#0d5c43',bd:'#d8eee2'},'Read only':{bg:'#fff',fg:'#555',bd:'#cdd2d6'}};
+const ROLE_DESC = {'Technician':'Find, assign, check in and repair assets. Cannot manage users or reference data.','Admin':'Everything a Technician can do, plus users, licences, disposal and the full audit trail.','Read only':'View and export. For managers and finance — no edits.'};
+const PERMS = [['View and search assets',1,1,1],['Assign and check in',1,1,0],['Edit and add assets',1,1,0],['Retire and dispose',0,1,0],['Manage users',0,1,0],['Export reports',1,1,1]];
+const blankUser = () => ({name:'',email:'',role:'Technician',dept:'IT Support',location:'Stafford HQ',active:true,invite:true,nameErr:false,emailErr:''});
+const fmtDT = (iso) => iso ? new Date(iso).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+const STATUS_STYLE = {
+  'Assigned':{bg:'#1b8463',fg:'#fff',bd:'#1b8463'},
+  'In stock':{bg:'#d8eee2',fg:'#0d5c43',bd:'#d8eee2'},
+  'In repair':{bg:'#fdecd9',fg:'#a34a00',bd:'#fdecd9'},
+  'Retired':{bg:'#4a4f55',fg:'#fff',bd:'#4a4f55'},
+};
+const EVENT_STYLE = {Assigned:{bg:'#1b8463',fg:'#fff'},Unassigned:{bg:'#f3f4f5',fg:'#5f656b'},Added:{bg:'#d8eee2',fg:'#0d5c43'},Edited:{bg:'#f3f4f5',fg:'#5f656b'},'Sent to repair':{bg:'#fdecd9',fg:'#a34a00'},Retired:{bg:'#4a4f55',fg:'#fff'},Audited:{bg:'#fff',fg:'#555'}};
+const ICONS = {
+  dash:'M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z', assets:'M2 7h20v10H2zM6 7V5h12v2M12 17v3M8 20h8',
+  audit:'M12 8v4l3 2M3.05 11a9 9 0 1 0 .5-4M3 3v5h5', reports:'M3 3v18h18M7 14l4-4 4 3 5-6',
+};
+const days = (iso) => Math.round((new Date(iso) - TODAY) / 86400000);
+const fmt = (iso) => iso ? new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '—';
+const ago = (iso) => { const d = Math.round((TODAY - new Date(iso)) / 86400000); return d <= 0 ? 'Today' : d === 1 ? 'Yesterday' : d < 30 ? d + 'd ago' : fmt(iso); };
+const initials = (n) => n ? n.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase() : '';
+const gbp = (n) => '£' + Math.round(n).toLocaleString('en-GB');
+const blankForm = () => ({type:'Laptop',status:'In stock',name:'',serial:'',location:'Store room',purchased:'',warranty:'',supplier:'',cost:'',notes:'',nameErr:false});
+const icon = (d) => React.createElement('svg',{width:18,height:18,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('path',{d}));
+
+class Component extends DCLogic {
+  state = { page:'dash', sel:null, assets:SEED, log:SEED_LOG, typeTab:'All', search:'', statusFilter:'all', locFilter:'all', auditTab:'All', form:blankForm(), editing:null, assignOpen:false, assign:{person:'',handover:'In person',date:'2026-10-25',ack:true}, toasts:[], expTab:'30', hideDecided:false, expSel:[], decisions:{}, users:SEED_USERS, changes:SEED_CHANGES, userSearch:'', roleTab:'All', userForm:blankUser(), editingUser:null, selUser:null, changeTab:'all', changeBy:'all', changePeriod:'all', auth:null, loginTab:'tech', login:{email:'',password:'',code:'',remember:true,err:'',step:'creds'} };
+  componentDidMount(){
+    const p = this.props.startPage;
+    let auth = null; try { auth = JSON.parse(localStorage.getItem('ts-assets-auth') || 'null'); } catch(e) {}
+    if (this.props.requireSignIn === false && !auth) auth = {id:'u1', name:'Jo Mensah', role:'Admin'};
+    this.setState({auth, ...(p && p !== 'dash' ? {page:p} : {})});
+  }
+  meCode(){ const a = this.state.auth; if (!a) return 'SYS'; const code = initials(a.name); if (!BY[code]) BY[code] = a.name; return code; }
+  signIn(user, remember){ const auth = {id:user.id, name:user.name, role:user.role}; if (remember) localStorage.setItem('ts-assets-auth', JSON.stringify(auth)); this.setState({auth, page: user.role === 'Admin' ? 'dash' : 'dash', login:{email:'',password:'',code:'',remember:true,err:'',step:'creds'}}); this.toast('Signed in as ' + user.name); }
+  addChange(kind, ref, field, oldV, newV, reason){ this.setState(s => ({changes:[{when:'2026-10-25T10:30', kind, ref, field, oldV:String(oldV || '—'), newV:String(newV || '—'), by:this.meCode(), reason:reason || ''}, ...s.changes]})); }
+  go = (page, extra) => () => this.setState({page, ...extra});
+  toast(msg){ const t = {id:Date.now(), msg}; this.setState(s => ({toasts:[...s.toasts, t]})); setTimeout(() => this.setState(s => ({toasts:s.toasts.filter(x => x.id !== t.id)})), 3200); }
+  logEvent(tag, action, detail){ this.setState(s => ({log:[{when:'2026-10-25T10:30', tag, action, detail, by:this.meCode()}, ...s.log]})); }
+  update(tag, patch){ this.setState(s => ({assets:s.assets.map(a => a.tag === tag ? {...a, ...patch} : a)})); }
+  open = (tag) => () => this.setState({page:'detail', sel:tag});
+  decorate(a){
+    const st = STATUS_STYLE[a.status] || STATUS_STYLE['In stock'];
+    const d = days(a.warranty), soon = d >= 0 && d <= 30, late = d < 0;
+    const p = PEOPLE.find(x => x.name === a.owner);
+    const total = (new Date(a.warranty) - new Date(a.purchased)) / 86400000, used = (TODAY - new Date(a.purchased)) / 86400000;
+    const lifePct = Math.max(0, Math.min(100, total > 0 ? used / total * 100 : 100));
+    return {...a, open:this.open(a.tag), sbg:st.bg, sfg:st.fg, sbd:st.bd,
+      owner: a.owner || (a.type === 'Network gear' ? 'Infrastructure' : 'Unassigned'), dept: p ? p.dept : (a.owner ? '' : a.status === 'Retired' ? '' : 'Pool'), ownerEmail: p ? p.email : '', ownerInit: initials(a.owner),
+      isAssigned: !!a.owner, notAssigned: !a.owner, canAssign: a.status !== 'Retired', assignLabel: a.owner ? 'Reassign' : 'Assign to employee', ownerOrLoc: a.owner || a.location,
+      warrantyLabel: a.status === 'Retired' ? 'Retired' : late ? 'Expired ' + fmt(a.warranty) : fmt(a.warranty),
+      warnSoon: soon && a.status !== 'Retired', warnLate: late && a.status !== 'Retired',
+      wcolor: late ? '#a8102a' : soon ? '#a34a00' : '#555', wweight: (soon || late) ? 700 : 400, edge: (soon || late) && a.status !== 'Retired' ? 'inset 3px 0 0 ' + (late ? '#a8102a' : '#f3c98d') : 'none',
+      purchased: fmt(a.purchased), assignedOn: fmt(a.assignedOn), handover: a.handover || '—',
+      lifePct: lifePct.toFixed(0) + '%', lifeColor: late ? '#a8102a' : soon ? '#a34a00' : '#1b8463',
+      lifeNote: late ? 'Cover has ended. Repairs are chargeable; consider replacement.' : soon ? d + ' days of cover remain. Raise a renewal or plan replacement.' : d + ' days of cover remain.',
+      kv:[{k:'Serial number',v:a.serial},{k:'Type',v:a.type},{k:'Supplier',v:a.supplier},{k:'Purchase date',v:fmt(a.purchased)},{k:'Purchase cost',v:gbp(a.cost)},{k:'Warranty ends',v:fmt(a.warranty)},{k:'Location',v:a.location},{k:'Notes',v:a.notes || '—'}],
+      history: this.state.log.filter(e => e.tag === a.tag).map(e => ({who:e.by, action:e.action, detail:e.detail, when:ago(e.when)})),
+      tickets: a.tag === 'TS-LAP-0388' ? [{id:'#4821',subj:'Keyboard keys not responding',st:'In progress',bg:'#d8eee2',fg:'#0d5c43'},{id:'#4602',subj:'Battery drains quickly',st:'Resolved',bg:'#f2f8f5',fg:'#0d5c43'}] : a.owner ? [{id:'#4590',subj:'Setup and handover',st:'Closed',bg:'#4a4f55',fg:'#fff'}] : [],
+    };
+  }
+  authVals(s){
+    const l = s.login, adminTab = s.loginTab === 'admin';
+    const setL = (k) => (e) => this.setState({login:{...this.state.login, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value, err:''}});
+    const submit = () => {
+      const email = l.email.trim().toLowerCase();
+      const user = s.users.find(u => u.email === email);
+      if (l.step === 'creds') {
+        if (!email || !l.password) return this.setState({login:{...l, err:'Enter your email and password.'}});
+        if (!user || !user.active) return this.setState({login:{...l, err:'We couldn\u2019t sign you in with those details.'}});
+        if (adminTab && user.role !== 'Admin') return this.setState({login:{...l, err:user.name + ' is a ' + user.role + ' account. Use the Technician sign-in.'}});
+        if (!adminTab && user.role === 'Admin') return this.setState({login:{...l, err:'Admin accounts must use the Admin sign-in with a verification code.'}});
+        if (adminTab) return this.setState({login:{...l, err:'', step:'code', code: l.code || ''}});
+        return this.signIn(user, l.remember);
+      }
+      if (l.code.trim() !== '246810') return this.setState({login:{...l, err:'That code didn\u2019t match. Codes refresh every 30 seconds.'}});
+      this.signIn(user, l.remember);
+    };
+    const me = s.auth ? {name:s.auth.name, role:s.auth.role, init:initials(s.auth.name), avBg: s.auth.role === 'Admin' ? '#fff' : '#d5e8de', avFg:'#0d5c43'} : {name:'', role:'', init:'', avBg:'#d5e8de', avFg:'#0d5c43'};
+    const page = s.auth && s.auth.role !== 'Admin' && ['users','userForm','userAudit'].includes(s.page) ? 'dash' : s.page;
+    return {
+      signedIn: !!s.auth, signedOut: !s.auth, me,
+      signOut:() => { localStorage.removeItem('ts-assets-auth'); this.setState({auth:null, page:'dash', assignOpen:false}); },
+      loginTabs: [['tech','Technician'],['admin','Admin']].map(([k,label]) => ({label, on: s.loginTab === k, go:() => this.setState({loginTab:k, login:{...l, err:'', step:'creds', code:''}}), bg: s.loginTab === k ? '#1b8463' : '#fff', fg: s.loginTab === k ? '#fff' : '#3a3f44', bd: s.loginTab === k ? '#1b8463' : '#cdd2d6'})),
+      login:{...l, heading: adminTab ? (l.step === 'code' ? 'Verify it\u2019s you' : 'Admin sign-in') : 'Technician sign-in', lede: adminTab ? 'For managing users, licences, disposal and audit.' : 'For the IT Support team\u2019s day-to-day work, and read-only access for managers.', cta: adminTab ? 'Continue' : 'Sign in', stepCreds: l.step === 'creds', stepCode: l.step === 'code'},
+      loginEmail:setL('email'), loginPassword:setL('password'), loginCode:setL('code'), loginRemember:setL('remember'),
+      loginKey:(e) => { if (e.key === 'Enter') submit(); }, submitLogin:submit,
+      backToCreds:() => this.setState({login:{...l, step:'creds', code:'', err:''}}),
+      forgot:() => this.toast('Reset link sent if the address is registered'),
+      demoAccounts: DEMO.map(d => { const u = s.users.find(x => x.id === d.id); const rs = ROLE_STYLE[u.role]; return {name:u.name, email:u.email, role:u.role, hint:d.hint, init:initials(u.name), rbg:rs.bg, rfg:rs.fg, rbd:rs.bd,
+        go:() => this.setState({loginTab:d.tab, login:{...this.state.login, email:u.email, password:'demo-pass', code: d.tab === 'admin' ? '246810' : '', err:'', step:'creds'}})}; }),
+      ...(page !== s.page ? {pgDash:true, pgUsers:false, pgUserForm:false, pgUserAudit:false} : {}),
+    };
+  }
+  userVals(s, tab, opt, selUser){
+    const uStatus = (u) => u.active ? (u.lastActive ? {statusLabel:'Active', sbg:'#1b8463', sfg:'#fff', sbd:'#1b8463'} : {statusLabel:'Invited', sbg:'#fdecd9', sfg:'#a34a00', sbd:'#fdecd9'}) : {statusLabel:'Inactive', sbg:'#4a4f55', sfg:'#fff', sbd:'#4a4f55'};
+    const userChanges = (id) => s.changes.filter(c => c.kind === 'user' && c.ref === id);
+    const decU = (u) => { const rs = ROLE_STYLE[u.role]; const ch = userChanges(u.id); return {...u, ...uStatus(u), init:initials(u.name), avBg: u.active ? '#d5e8de' : '#f3f4f5', avFg: u.active ? '#0d5c43' : '#777', rbg:rs.bg, rfg:rs.fg, rbd:rs.bd,
+      lastActive: u.lastActive ? ago(u.lastActive) : 'Never signed in', lastChanged: ch.length ? ago(ch[0].when) + ' · ' + ch[0].field : 'Created ' + fmt(u.created),
+      open:() => this.setState({page:'userAudit', selUser:u.id}), edit:(e) => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({page:'userForm', editingUser:u.id, userForm:{...blankUser(), ...u, invite:false}}); } }; };
+    const allU = s.users.map(decU);
+    const q = s.userSearch.trim().toLowerCase();
+    const userRows = allU.filter(u => (s.roleTab === 'All' || (s.roleTab === 'Inactive' ? !u.active : u.role === s.roleTab && u.active)) && (!q || (u.name + ' ' + u.email).toLowerCase().includes(q)));
+    const roleTabs = ['All','Admin','Technician','Read only','Inactive'].map(r => ({label:r, count: r === 'All' ? allU.length : r === 'Inactive' ? allU.filter(u => !u.active).length : allU.filter(u => u.role === r && u.active).length, go:() => this.setState({roleTab:r}), ...tab(s.roleTab === r)}));
+    const userStats = [
+      {label:'Active users', value:allU.filter(u => u.active).length, sub:'can sign in', bd:'#e3e5e8', go:() => this.setState({roleTab:'All'})},
+      {label:'Admins', value:allU.filter(u => u.role === 'Admin' && u.active).length, sub:'full access', bd:'#e3e5e8', go:() => this.setState({roleTab:'Admin'})},
+      {label:'Pending invites', value:s.users.filter(u => u.active && !u.lastActive).length, sub:'not yet signed in', bd:'#e3e5e8', go:() => this.setState({roleTab:'All', userSearch:''})},
+      {label:'Changes this month', value:s.changes.filter(c => c.kind === 'user' && c.when >= '2026-10-01').length, sub:'to user records', bd:'#e3e5e8', go:() => this.setState({page:'changes', changeTab:'user', changePeriod:'30'})},
+    ];
+    const uf = s.userForm;
+    const mark = (on) => on ? {mark:'✓', bg:'#1b8463', fg:'#fff', bd:'#1b8463'} : {mark:'–', bg:'#fff', fg:'#777', bd:'#cdd2d6'};
+    const permRows = PERMS.map(([label,t,a,r]) => ({label, t:mark(t), a:mark(a), r:mark(r)}));
+    const setU = (k) => (e) => this.setState({userForm:{...this.state.userForm, [k]:e.target.value, nameErr: k === 'name' ? false : this.state.userForm.nameErr, emailErr: k === 'email' ? '' : this.state.userForm.emailErr}});
+    const decC = (c) => { const u = s.users.find(x => x.id === c.ref), a = s.assets.find(x => x.tag === c.ref); return {...c, whenFull:fmtDT(c.when), when:ago(c.when), byName:BY[c.by] || c.by, oldLabel:c.oldV || '—', newLabel:c.newV || '—', reason:c.reason || '—',
+      kindLabel: c.kind === 'user' ? 'User' : 'Asset', kbg: c.kind === 'user' ? '#fdecd9' : '#d8eee2', kfg: c.kind === 'user' ? '#a34a00' : '#0d5c43',
+      recordLabel: c.kind === 'user' ? (u ? u.name : c.ref) : c.ref, recordSub: c.kind === 'user' ? (u ? u.email : '') : (a ? a.name : ''),
+      open: c.kind === 'user' ? () => this.setState({page:'userAudit', selUser:c.ref}) : this.open(c.ref)}; };
+    const ufChanges = s.editingUser ? userChanges(s.editingUser).map(decC) : [];
+    const ua = decU(selUser); const uaChanges = userChanges(selUser.id).map(decC);
+    const cutoff = s.changePeriod === 'all' ? '' : new Date(TODAY - Number(s.changePeriod) * 86400000).toISOString().slice(0,10);
+    const changeRows = s.changes.filter(c => (s.changeTab === 'all' || c.kind === s.changeTab) && (s.changeBy === 'all' || c.by === s.changeBy) && (!cutoff || c.when >= cutoff)).map(decC);
+    const changeTabs = [['all','All'],['asset','Assets'],['user','Users']].map(([k,label]) => ({label, count: k === 'all' ? s.changes.length : s.changes.filter(c => c.kind === k).length, go:() => this.setState({changeTab:k}), ...tab(s.changeTab === k)}));
+    return {
+      pgUsers: s.page === 'users', pgUserForm: s.page === 'userForm', pgUserAudit: s.page === 'userAudit', pgChanges: s.page === 'changes',
+      userStats, roleTabs, userRows, userSummary: userRows.length + ' of ' + allU.length + ' users', userSearch:s.userSearch, setUserSearch:(e) => this.setState({userSearch:e.target.value}),
+      userFormTitle: s.editingUser ? 'Account details' : 'New user', userFormLede: s.editingUser ? 'Changes take effect at their next sign-in.' : 'Use their work email — it is also their sign-in name.',
+      uf:{...uf, isNew:!s.editingUser, isEdit:!!s.editingUser, saveLabel: s.editingUser ? 'Save changes' : (uf.invite ? 'Create and invite' : 'Create user'), nameBd: uf.nameErr ? '#a8102a' : '#cdd2d6', emailBd: uf.emailErr ? '#a8102a' : '#cdd2d6', inviteBd: uf.invite ? '#1b8463' : '#cdd2d6', inviteBg: uf.invite ? '#f2f8f5' : '#fff'},
+      ufName:setU('name'), ufEmail:setU('email'), ufDept:setU('dept'), ufLocation:setU('location'), ufInvite:(e) => this.setState({userForm:{...uf, invite:e.target.checked}}),
+      roleOpts: ['Technician','Admin','Read only'].map(r => ({label:r, desc:ROLE_DESC[r], on: uf.role === r, go:() => this.setState({userForm:{...uf, role:r}}), bd: uf.role === r ? '#1b8463' : '#cdd2d6', bg: uf.role === r ? '#f2f8f5' : '#fff'})),
+      activeOpts: [['Yes',true],['No',false]].map(([label,v]) => ({label, go:() => this.setState({userForm:{...uf, active:v}}), ...(uf.active === v ? (v ? opt(true) : {bg:'#4a4f55', fg:'#fff', bd:'#4a4f55'}) : opt(false))})),
+      permRows, ufRecent: ufChanges.slice(0,3), ufNoRecent: s.editingUser && ufChanges.length === 0, openUserAudit:() => this.setState({page:'userAudit', selUser:s.editingUser}),
+      cancelUserForm:() => this.setState({page: s.editingUser ? 'userAudit' : 'users', selUser: s.editingUser || s.selUser}),
+      saveUser:() => {
+        const emailOk = /^[^@\s]+@topcashback\.co\.uk$/i.test(uf.email.trim());
+        const dup = s.users.some(u => u.email.toLowerCase() === uf.email.trim().toLowerCase() && u.id !== s.editingUser);
+        if (!uf.name.trim() || !emailOk || dup) { this.setState({userForm:{...uf, nameErr:!uf.name.trim(), emailErr: dup ? 'An account with this email already exists.' : emailOk ? '' : 'Use a topcashback.co.uk address.'}}); return; }
+        const rec = {name:uf.name.trim(), email:uf.email.trim().toLowerCase(), role:uf.role, dept:uf.dept, location:uf.location, active:uf.active};
+        if (s.editingUser) {
+          const prev = s.users.find(u => u.id === s.editingUser);
+          const labels = {name:'Full name', email:'Work email', role:'Role', dept:'Department', location:'Location', active:'Account active'};
+          Object.keys(labels).forEach(k => { if (prev[k] !== rec[k]) this.addChange('user', prev.id, labels[k], k === 'active' ? (prev[k] ? 'Yes' : 'No') : prev[k], k === 'active' ? (rec[k] ? 'Yes' : 'No') : rec[k]); });
+          this.setState(st => ({users:st.users.map(u => u.id === prev.id ? {...u, ...rec} : u), page:'userAudit', selUser:prev.id})); this.toast('Saved ' + rec.name);
+        } else {
+          const id = 'u' + (s.users.length + 1);
+          this.setState(st => ({users:[...st.users, {...rec, id, lastActive:'', created:'2026-10-25'}], page:'userAudit', selUser:id}));
+          this.addChange('user', id, 'Account', '—', 'Created', uf.invite ? 'Invitation sent' : 'Created without invite'); this.toast(uf.invite ? 'Invitation sent to ' + rec.email : 'Created ' + rec.name);
+        }
+      },
+      ua:{...ua, changes:uaChanges, changeCount:uaChanges.length === 1 ? '1 change' : uaChanges.length + ' changes', noChanges:uaChanges.length === 0},
+      changeTabs, changeRows, changesEmpty: changeRows.length === 0, changeSummary: changeRows.length + ' of ' + s.changes.length + ' field changes',
+      changeBy:s.changeBy, setChangeBy:(e) => this.setState({changeBy:e.target.value}), changePeriod:s.changePeriod, setChangePeriod:(e) => this.setState({changePeriod:e.target.value}),
+      exportChanges:() => this.toast('CSV export started (' + changeRows.length + ' rows)'),
+    };
+  }
+  renderVals(){
+    const s = this.state, showBanner = this.props.showWarrantyBanner ?? true;
+    const all = s.assets.map(a => this.decorate(a));
+    const active = all.filter(a => a.status !== 'Retired');
+    const expiring = active.filter(a => a.warnSoon);
+    const sel = all.find(a => a.tag === s.sel) || all[0];
+    const navStyle = (on) => ({bg: on ? '#d5e8de' : 'transparent', fg: on ? '#0d5c43' : '#fff', hbg: on ? '#d5e8de' : 'rgba(255,255,255,.14)', cbg: on ? '#fff' : 'rgba(255,255,255,.2)', cfg: on ? '#0d5c43' : '#fff'});
+    const onAssets = ['assets','detail','form'].includes(s.page);
+    const navMain = [
+      {label:'Dashboard', icon:icon(ICONS.dash), go:this.go('dash'), ...navStyle(s.page === 'dash')},
+      {label:'Inventory', icon:icon(ICONS.assets), count:active.length, go:this.go('assets',{typeTab:'All',statusFilter:'all'}), ...navStyle(onAssets && s.statusFilter !== 'In repair')},
+      {label:'In repair', icon:icon('M14.7 6.3a4 4 0 0 0 5 5L13 18l-7 3-3-3 3-7 6.7-6.7z'), count:all.filter(a => a.status === 'In repair').length, go:this.go('assets',{typeTab:'All',statusFilter:'In repair'}), ...navStyle(onAssets && s.statusFilter === 'In repair')},
+      {label:'Expiring soon', icon:icon('M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01'), count:expiring.length, go:this.go('expiring',{expTab:'30'}), ...navStyle(s.page === 'expiring'), ...(s.page === 'expiring' ? {} : {cbg:'#fbe2e5', cfg:'#a8102a'})},
+    ];
+    const navInsight = [
+      {label:'Audit log', icon:icon(ICONS.audit), go:this.go('audit'), ...navStyle(s.page === 'audit')},
+      {label:'Reports', icon:icon(ICONS.reports), go:this.go('reports'), ...navStyle(s.page === 'reports')},
+    ];
+    const isAdmin = !!(s.auth && s.auth.role === 'Admin');
+    const userArea = isAdmin && ['users','userForm','userAudit'].includes(s.page);
+    const navAdmin = [
+      {label:'Users', icon:icon('M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75'), count:s.users.filter(u => u.active).length, go:this.go('users'), ...navStyle(userArea)},
+      {label:'Record changes', icon:icon('M12 3v18M3 12h18M5 5l14 14M19 5 5 19'), go:this.go('changes'), ...navStyle(s.page === 'changes')},
+    ];
+    const selUser = s.users.find(u => u.id === s.selUser) || s.users[0];
+    const titles = {users:['Users', s.users.filter(u => u.active).length + ' active accounts · ' + s.users.filter(u => !u.active).length + ' inactive'], userForm:[s.editingUser ? 'Edit user' : 'Create user', s.editingUser ? 'Every saved change is written to the record history.' : 'Create an account and choose what they can do.'], userAudit:[selUser.name, 'Account change history'], changes:['Record changes','Field-level before and after for every asset and user.'], dash:['Asset dashboard','What the estate looks like this morning.'], assets:['Inventory', active.length + ' active assets across 4 locations.'], detail:[sel.name, sel.tag + ' · ' + sel.type], form:[s.editing ? 'Edit ' + s.editing : 'Add asset', s.editing ? 'Changes are written to the audit log.' : 'Register hardware or a licence seat.'], audit:['Audit log','Every change to every asset, newest first.'], expiring:['Expiring soon','Warranties and licences that need a renew-or-replace decision.'], reports:['Reports','Warranty, status and licence coverage.']};
+    const tab = (on) => ({bg: on ? '#1b8463' : '#fff', fg: on ? '#fff' : '#3a3f44', bd: on ? '#1b8463' : '#cdd2d6', cbg: on ? '#fff' : '#f3f4f5', cfg: on ? '#0d5c43' : '#5f656b'});
+    const typeTabs = ['All', ...TYPES].map(t => ({label: t === 'All' ? 'All' : t + 's', count: t === 'All' ? all.length : all.filter(a => a.type === t).length, go:() => this.setState({typeTab:t}), ...tab(s.typeTab === t)})).map(t => ({...t, label: t.label.replace('licences','licences').replace('gears','gear')}));
+    const q = s.search.trim().toLowerCase();
+    const rows = all.filter(a => (s.typeTab === 'All' || a.type === s.typeTab) && (s.statusFilter === 'all' || a.status === s.statusFilter) && (s.locFilter === 'all' || a.location === s.locFilter) && (!q || [a.tag,a.name,a.serial,a.owner].join(' ').toLowerCase().includes(q))).sort((x,y) => x.tag.localeCompare(y.tag));
+    const byType = TYPES.map(t => { const n = active.filter(a => a.type === t).length, asg = active.filter(a => a.type === t && a.owner).length; return {label:t, count:n, pct:(n ? asg / n * 100 : 0) + '%'}; });
+    const stats = [
+      {label:'Active assets', value:active.length, sub:gbp(active.reduce((n,a) => n + a.cost, 0)) + ' purchase value', color:'#0d4a37', go:this.go('assets',{typeTab:'All',statusFilter:'all'})},
+      {label:'Assigned', value:active.filter(a => a.isAssigned).length, sub:'to ' + new Set(active.filter(a => a.isAssigned).map(a => a.owner)).size + ' people', color:'#0d4a37', go:this.go('assets',{typeTab:'All',statusFilter:'Assigned'})},
+      {label:'In stock', value:all.filter(a => a.status === 'In stock').length, sub:'ready to issue', color:'#0d4a37', go:this.go('assets',{typeTab:'All',statusFilter:'In stock'})},
+      {label:'In repair', value:all.filter(a => a.status === 'In repair').length, sub:'with supplier', color:'#0d4a37', go:this.go('assets',{typeTab:'All',statusFilter:'In repair'})},
+      {label:'Warranty ≤ 30 days', value:expiring.length, sub:'need a decision', color: expiring.length ? '#a8102a' : '#0d4a37', go:this.go('expiring',{expTab:'30'})},
+    ];
+    const findName = (tag) => (s.assets.find(a => a.tag === tag) || {}).name || '';
+    const logRows = s.log.map(e => ({...e, who:e.by, name:findName(e.tag), byName:BY[e.by] || e.by, open:this.open(e.tag), when:ago(e.when), ...(EVENT_STYLE[e.action] || EVENT_STYLE.Edited)}));
+    const auditCats = ['All','Assigned','Added','Edited','Repair','Retired'];
+    const auditRows = logRows.filter(e => s.auditTab === 'All' || (s.auditTab === 'Repair' ? e.action === 'Sent to repair' : s.auditTab === 'Assigned' ? ['Assigned','Unassigned'].includes(e.action) : e.action === s.auditTab));
+    const qs = [{label:'Q4 2026',from:'2026-10-01',to:'2026-12-31'},{label:'Q1 2027',from:'2027-01-01',to:'2027-03-31'},{label:'Q2 2027',from:'2027-04-01',to:'2027-06-30'},{label:'Q3 2027',from:'2027-07-01',to:'2027-09-30'},{label:'Later',from:'2027-10-01',to:'2099-01-01'}];
+    const fc = qs.map(qq => ({label:qq.label, count:active.filter(a => a.warranty >= qq.from && a.warranty <= qq.to).length})); const fcMax = Math.max(1, ...fc.map(x => x.count));
+    const forecast = fc.map((x,i) => ({...x, pct:(x.count / fcMax * 100) + '%', color: i === 0 ? '#a34a00' : '#1b8463'}));
+    const stOrder = ['Assigned','In stock','In repair','Retired'];
+    const byStatus = stOrder.map(k => ({label:k, count:all.filter(a => a.status === k).length, color: k === 'In repair' ? '#a34a00' : k === 'Retired' ? '#4a4f55' : '#1b8463'})).map(x => ({...x, pct:(x.count / all.length * 100) + '%'}));
+    const licences = [{label:'Microsoft 365 E3',used:142,seats:150},{label:'Adobe Creative Cloud',used:9,seats:8},{label:'JetBrains All Products',used:11,seats:15},{label:'Slack Business+',used:150,seats:150}].map(l => ({...l, pct:Math.min(100, l.used / l.seats * 100) + '%', color: l.used > l.seats ? '#a8102a' : l.used / l.seats > .9 ? '#a34a00' : '#1b8463'}));
+    const locs = ['Stafford HQ','London','Remote','Store room'].map(l => ({label:l, v:active.filter(a => a.location === l).reduce((n,a) => n + a.cost, 0)})); const lmax = Math.max(1, ...locs.map(x => x.v));
+    const byLoc = locs.map(x => ({label:x.label, value:gbp(x.v), pct:(x.v / lmax * 100) + '%'}));
+    const opt = (on) => ({bg: on ? '#1b8463' : '#fff', fg: on ? '#fff' : '#3a3f44', bd: on ? '#1b8463' : '#cdd2d6'});
+    // Expiring soon
+    const expAll = active.map(a => ({...a, d: days(a.warranty)})).filter(a => a.d <= 90);
+    const bucket = (a) => a.d < 0 ? 'expired' : a.d <= 30 ? '30' : '90';
+    const expCount = (b) => expAll.filter(a => bucket(a) === b).length;
+    const undecided = expAll.filter(a => !s.decisions[a.tag]);
+    const replaceCostOf = (a) => a.type === 'Software licence' ? a.cost : Math.round(a.cost * 1.08);
+    const expStats = [
+      {label:'Expired', value:expCount('expired'), sub:'out of cover now', color:expCount('expired') ? '#a8102a' : '#0d4a37', bd:s.expTab === 'expired' ? '#1b8463' : '#e3e5e8', go:() => this.setState({expTab:'expired'})},
+      {label:'Next 30 days', value:expCount('30'), sub:'decision needed', color:expCount('30') ? '#a34a00' : '#0d4a37', bd:s.expTab === '30' ? '#1b8463' : '#e3e5e8', go:() => this.setState({expTab:'30'})},
+      {label:'31–90 days', value:expCount('90'), sub:'plan ahead', color:'#0d4a37', bd:s.expTab === '90' ? '#1b8463' : '#e3e5e8', go:() => this.setState({expTab:'90'})},
+      {label:'Undecided', value:undecided.length, sub:gbp(undecided.reduce((n,a) => n + replaceCostOf(a), 0)) + ' if all replaced', color:'#0d4a37', bd:'#e3e5e8', go:() => this.setState({hideDecided:true, expTab:'all'})},
+    ];
+    const expTabDefs = [['30','≤ 30 days'],['90','31–90 days'],['expired','Expired'],['all','All']];
+    const expTabs = expTabDefs.map(([k,label]) => ({label, count: k === 'all' ? expAll.length : expCount(k), go:() => this.setState({expTab:k}), ...tab(s.expTab === k)}));
+    const expVisible = expAll.filter(a => (s.expTab === 'all' || bucket(a) === s.expTab) && !(s.hideDecided && s.decisions[a.tag])).sort((x,y) => x.d - y.d);
+    const decide = (tag, val) => { const dec = {...this.state.decisions}; if (dec[tag] === val) delete dec[tag]; else dec[tag] = val; this.setState({decisions:dec}); if (dec[tag]) { this.logEvent(tag, 'Edited', 'Warranty decision: ' + val); this.toast(tag + ' — ' + val); } };
+    const expRows = expVisible.map(a => {
+      const b = bucket(a), dec = s.decisions[a.tag];
+      const chip = b === 'expired' ? {dbg:'#fbe2e5', dfg:'#a8102a', dbd:'#fbe2e5'} : b === '30' ? {dbg:'#fdecd9', dfg:'#a34a00', dbd:'#fdecd9'} : {dbg:'#f3f4f5', dfg:'#5f656b', dbd:'#f3f4f5'};
+      const checked = s.expSel.includes(a.tag);
+      return {...a, ...chip, checked, rowBg: checked ? '#f2f8f5' : 'transparent',
+        toggle:() => this.setState(st => ({expSel: checked ? st.expSel.filter(t => t !== a.tag) : [...st.expSel, a.tag]})),
+        warrantyDate: fmt(a.warranty), daysLabel: a.d < 0 ? Math.abs(a.d) + 'd overdue' : a.d === 0 ? 'Today' : a.d + 'd',
+        replaceCost: gbp(replaceCostOf(a)), edge: b === 'expired' ? 'inset 3px 0 0 #a8102a' : b === '30' ? 'inset 3px 0 0 #f3c98d' : 'none',
+        decidedNote: dec ? 'Decided · ' + dec + ' · ' + (s.auth ? s.auth.name : '') + ', today' : '',
+        decisions: ['Renew','Replace','Let lapse'].map(v => ({label:v, go:() => decide(a.tag, v), ...opt(dec === v)})),
+      };
+    });
+    const bulk = (val) => { const dec = {...s.decisions}; s.expSel.forEach(t => { dec[t] = val; }); this.setState({decisions:dec, expSel:[]}); this.toast(s.expSel.length + ' assets marked ' + val); };
+    const f = s.form, as = s.assign;
+    const setF = (k) => (e) => this.setState({form:{...this.state.form, [k]:e.target.value, nameErr: k === 'name' ? false : this.state.form.nameErr}});
+    return {
+      navMain, navInsight, title:titles[s.page][0], subtitle:titles[s.page][1], isDetail: s.page === 'detail',
+      pgDash: s.page === 'dash', pgAssets: s.page === 'assets', pgDetail: s.page === 'detail', pgForm: s.page === 'form', pgAudit: s.page === 'audit', pgReports: s.page === 'reports',
+      showBanner: showBanner && expiring.length > 0, expiringCount: expiring.length, stats, byType, recent: logRows.slice(0,6),
+      goAssets: this.go('assets'), goAudit: this.go('audit'), goReports: this.go('reports'), goNew: this.go('form',{form:blankForm(), editing:null}),
+      typeTabs, rows, noRows: rows.length === 0, rowSummary: rows.length + ' of ' + all.length + ' assets',
+      search: s.search, setSearch:(e) => this.setState({search:e.target.value}), statusFilter:s.statusFilter, setStatus:(e) => this.setState({statusFilter:e.target.value}), locFilter:s.locFilter, setLoc:(e) => this.setState({locFilter:e.target.value}),
+      clearFilters:() => this.setState({search:'',statusFilter:'all',locFilter:'all',typeTab:'All'}),
+      a: sel,
+      openAssign:() => this.setState({assignOpen:true, assign:{person:'', handover:'In person', date:'2026-10-25', ack:true}}),
+      closeAssign:() => this.setState({assignOpen:false}), stop:(e) => e.stopPropagation(), assignOpen:s.assignOpen,
+      unassign:() => { this.update(sel.tag, {owner:'', status:'In stock', location:'Store room', assignedOn:'', handover:''}); this.logEvent(sel.tag,'Unassigned','from ' + sel.owner + ' · returned to store room'); this.toast(sel.tag + ' returned to stock'); },
+      retire:() => { this.update(sel.tag, {status:'Retired', owner:'', location:'Store room'}); this.logEvent(sel.tag,'Retired','Marked for disposal'); this.toast(sel.tag + ' retired'); },
+      goEdit:() => this.setState({page:'form', editing:sel.tag, form:{...blankForm(), ...s.assets.find(a => a.tag === sel.tag), cost:String(sel.cost)}}),
+      people:PEOPLE, as:{...as, ackBd: as.ack ? '#1b8463' : '#cdd2d6', ackBg: as.ack ? '#f2f8f5' : '#fff', disabled: !as.person, opacity: as.person ? 1 : .55},
+      asPerson:(e) => this.setState({assign:{...as, person:e.target.value}}), asDate:(e) => this.setState({assign:{...as, date:e.target.value}}), asAck:(e) => this.setState({assign:{...as, ack:e.target.checked}}),
+      handoverOpts:['In person','Courier','Email'].map(h => ({label:h, go:() => this.setState({assign:{...as, handover:h}}), ...opt(as.handover === h)})),
+      confirmAssign:() => { const p = PEOPLE.find(x => x.name === as.person); this.update(sel.tag, {owner:as.person, status:'Assigned', assignedOn:as.date, handover:as.handover, location: as.handover === 'Courier' ? 'Remote' : sel.location}); this.logEvent(sel.tag,'Assigned','to ' + as.person + ' · ' + as.handover + (as.ack ? ' · acknowledgement sent' : '')); this.setState({assignOpen:false}); this.toast(sel.tag + ' assigned to ' + p.name); },
+      formTitle: s.editing ? 'Asset record' : 'New asset', saveLabel: s.editing ? 'Save changes' : 'Create asset',
+      f:{...f, nameBd: f.nameErr ? '#a8102a' : '#cdd2d6'}, fType:setF('type'), fStatus:setF('status'), fName:setF('name'), fSerial:setF('serial'), fLocation:setF('location'), fPurchased:setF('purchased'), fWarranty:setF('warranty'), fSupplier:setF('supplier'), fCost:setF('cost'), fNotes:setF('notes'),
+      cancelForm:() => this.setState({page: s.editing ? 'detail' : 'assets'}),
+      saveForm:() => {
+        if (!f.name.trim()) { this.setState({form:{...f, nameErr:true}}); return; }
+        const patch = {type:f.type, status:f.status, name:f.name, serial:f.serial, location:f.location, purchased:f.purchased, warranty:f.warranty, supplier:f.supplier, cost:Number(f.cost) || 0, notes:f.notes};
+        if (s.editing) {
+          const prev = s.assets.find(a => a.tag === s.editing) || {};
+          const labels = {type:'Type',status:'Status',name:'Make and model',serial:'Serial number',location:'Location',purchased:'Purchase date',warranty:'Warranty ends',supplier:'Supplier',cost:'Purchase cost',notes:'Notes'};
+          Object.keys(labels).forEach(k => { if (String(prev[k] ?? '') !== String(patch[k] ?? '')) this.addChange('asset', s.editing, labels[k], k === 'cost' ? gbp(prev[k] || 0) : prev[k], k === 'cost' ? gbp(patch[k]) : patch[k]); });
+          this.update(s.editing, patch); this.logEvent(s.editing,'Edited','Record updated'); this.setState({page:'detail', sel:s.editing}); this.toast('Saved ' + s.editing); }
+        else { const pre = {Laptop:'LAP',Monitor:'MON',Phone:'PHN',Peripheral:'PER','Software licence':'LIC','Network gear':'NET'}[f.type]; const tag = 'TS-' + pre + '-' + String(500 + s.assets.length); this.setState(st => ({assets:[...st.assets, {...patch, tag, owner:'', assignedOn:'', handover:'', purchased:f.purchased || '2026-10-25', warranty:f.warranty || '2029-10-25'}], page:'detail', sel:tag})); this.logEvent(tag,'Added','Registered by ' + (s.auth ? s.auth.name : 'IT Support')); this.toast(tag + ' created'); }
+      },
+      auditTabs: auditCats.map(c => ({label:c, go:() => this.setState({auditTab:c}), ...tab(s.auditTab === c)})), auditRows, auditSummary: auditRows.length + ' events',
+      forecast, byStatus, licences, byLoc, toasts:s.toasts,
+      ...this.userVals(s, tab, opt, selUser),
+      ...this.authVals(s),
+      navAdmin: isAdmin ? navAdmin : [], isAdmin, canEdit: !!(s.auth && s.auth.role !== 'Read only'), isUserArea: userArea, goUsers: this.go('users'),
+      primaryLabel: userArea ? 'Create user' : 'Add asset',
+      primaryGo: userArea ? this.go('userForm',{userForm:blankUser(), editingUser:null}) : this.go('form',{form:blankForm(), editing:null}),
+      pgExpiring: s.page === 'expiring', goExpiring: this.go('expiring',{expTab:'30'}), expStats, expTabs, expRows, expEmpty: expRows.length === 0,
+      hideDecided: s.hideDecided, toggleDecided:(e) => this.setState({hideDecided:e.target.checked}),
+      expSelectedCount: s.expSel.length, expAllChecked: expVisible.length > 0 && expVisible.every(a => s.expSel.includes(a.tag)),
+      toggleAllExp:(e) => this.setState({expSel: e.target.checked ? expVisible.map(a => a.tag) : []}),
+      bulkRenew:() => bulk('Renew'), bulkReplace:() => bulk('Replace'), bulkClear:() => this.setState({expSel:[]}),
+      expSummary: expRows.length + ' of ' + expAll.length + ' within 90 days · ' + Object.keys(s.decisions).length + ' decided',
+      exportExp:() => this.toast('CSV export started (' + expRows.length + ' rows)'),
+    };
+  }
+}
+</script>
+</body>
+</html>
